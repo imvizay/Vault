@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('./assets/fonts/ChunkyPlayful.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SaphoraHayden';
+  src: url('./assets/fonts/SaphoraHayden.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* @font-face {
+  font-family: 'VitoBold';
+  src: url('./assets/fonts/VitoBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+} */
+
+
+@font-face {
+  font-family: 'SyneExtra';
+  src: url('./assets/fonts/Syne-Bold.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SyneExtraBold';
+  src: url('./assets/fonts/Syne-Extra.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face{
+  font-family: 'ForeverHandmade';
+  src: url('./assets/fonts/ForeverHandmade.otf') format('opentype');
+  font-style: normal;
+}
+
+@theme {
+  --font-heading: "Satoshi", sans-serif;
+  --font-paragraphs: "SaphoraHayden", sans-serif;
+  --font-navlinks: "VitoBold", sans-serif;
+}
+
+*{
+  user-select: none;
+  cursor: none;
+}
+
+
+/* Global css */
+:root {
+  --bg: #080810;
+  --surface: #0d0d1a;
+  --purple: #7b5ea7;
+  --purple-glow: #a673e8;
+  --purple-glow-fadeout:#ffffff;
+  --pink: #e06fa3;
+  --cyan: #52d9d9;
+  --gold: #c9a84c;
+  --text: #e8e4f0;
+  --muted: #6b6480;
+  --glass: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.08);
+ 
+}
+
+body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;   
+}

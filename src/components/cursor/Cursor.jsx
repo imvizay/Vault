@@ -36,8 +36,11 @@ function Cursor() {
 
     }
 
+    // Handle Cursor
     window.addEventListener('mousemove', moveCursor)
 
+
+    // Handle Cursor Morphing
     const morphTargets = document.querySelectorAll("[data-cursor='morph']")
 
     morphTargets.forEach(element => {
@@ -55,17 +58,21 @@ function Cursor() {
         })
 
         gsap.to(glowRef.current, {
-          width: rect.width + 30,
-          height: rect.height + 15,
-          backgroundColor:"var(--purple-glow-fadeout)",
+          width: rect.width + 15,
+          height: rect.height + 7.5,
+      
+          backgroundColor:"rgba(168,85,247,0.08)",
+          borderColor:"rgba(168,85,247,0.3)",
 
           x: rect.left + rect.width / 2,
           y: rect.top + rect.height / 2,
 
           borderRadius: 999,
 
-          duration: 0.55,
-          ease: 'power4.out',
+          duration: 0.35,
+          ease: 'power2.out',
+
+          overwrite:'auto'
         })
       }
 
@@ -105,13 +112,14 @@ function Cursor() {
     <>
 
       {/* INNER DOT */}
-      <div ref={cursorRef} className=" fixed top-0 left-0 w-2 h-2 rounded-full bg-white pointer-events-none z-80"/>
+      <div ref={cursorRef} className=" fixed top-0 left-0 w-2 h-2 rounded-full bg-white pointer-events-none z-[999]"/>
 
       {/* GLOW */}
       <div 
       ref={glowRef} 
-      className=" fixed top-0 left-0 w-10 h-10 rounded-full border border-purple-400/20  pointer-events-none will-change-transform z-40
-    "/>
+      className=" fixed top-0 left-0 w-10 h-10 rounded-full border border-purple-400/20  
+      pointer-events-none will-change-transform z-[998]
+      "/>
 
 
     {/* progress bar */}

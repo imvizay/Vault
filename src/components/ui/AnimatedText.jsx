@@ -38,10 +38,10 @@ export default function AnimatedText({children,className=''}) {
     <div
       // data-cursor="morph"
       ref={wrapperRef}
-      className={`relative overflow-hidden leading-none h-[1em] ${className}`}
+      className={`relative overflow-hidden leading-none h-[1.1em] ${className}`}
     >
 
-     <div ref={trackRef} className="flex flex-col">
+     <div ref={trackRef} className="flex flex-col gap-1">
 
         <span className="block">
           {children}

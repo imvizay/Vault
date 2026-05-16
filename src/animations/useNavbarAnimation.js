@@ -3,9 +3,15 @@ import { useRef,useEffect } from 'react';
 
 function useNavbarAnimation(openMenu) {
 
+    // open menu icon
     const topLineRef = useRef(null)
     const midLineRef = useRef(null)
     const botLineRef = useRef(null)
+
+    // close menu icon
+    const clTopLineRef = useRef(null) 
+    const clBottomLineRef = useRef(null) 
+
 
     const mobileMenuOverlayRef = useRef(null)
     const menuBgRef = useRef(null)
@@ -54,8 +60,11 @@ function useNavbarAnimation(openMenu) {
 
         tl.current.to(topLineRef.current,{
             rotate:45,
-            y:8
+            y:7,
+            duration:0.45,
+            ease:'power3.out'
         },0)
+
 
         tl.current.to(midLineRef.current,{
             opacity:0,
@@ -63,7 +72,19 @@ function useNavbarAnimation(openMenu) {
 
         tl.current.to(botLineRef.current,{
             rotate:-45,
-            y:-8
+            y:-7,
+            duration:0.45,
+            ease:'power3.out'
+        },0)
+
+        tl.current.to(clTopLineRef.current,{
+            rotate:45,
+            y:-15
+        },0)
+
+        tl.current.to(clBottomLineRef.current,{
+            rotate:-45,
+            y:-18
         },0)
 
     },[])
@@ -110,6 +131,10 @@ function useNavbarAnimation(openMenu) {
         topLineRef,
         midLineRef,
         botLineRef,
+
+        clTopLineRef,
+        clBottomLineRef,
+
         mobileMenuOverlayRef,
         menuBgRef
     }

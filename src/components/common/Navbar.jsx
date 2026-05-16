@@ -10,16 +10,21 @@ function Navbar() {
   const {
     menuBgRef,
     mobileMenuOverlayRef,
+
     topLineRef,
     midLineRef,
-    botLineRef
+    botLineRef,
+
+    clTopLineRef,
+    clBottomLineRef,
+
   } = useNavbarAnimation(openMenu)
 
   return (
     <>
 
       {/* NAVBAR */}
-      <nav className='px-4 py-4 fixed top-0 left-0 right-0 z-[60] flex items-center justify-between border border-transparent'>
+      <nav className='px-4 py-4 fixed top-0 left-0 right-0 z-[997] flex items-center justify-between border border-transparent backdrop-blur-2xl'>
 
         {/* LOGO */}
         <div className='font-[SyneExtraBold] text-sm'>
@@ -61,7 +66,7 @@ function Navbar() {
         </button>
 
         {/* MOBILE HAMBURGER */}
-        <div onClick={() => setOpenMenu(true)} data-cursor='morph' className='md:hidden flex flex-col justify-end items-end gap-1.5 z-[200] cursor-pointer'>
+        <div onClick={() => setOpenMenu( p => !p )} className='md:hidden flex flex-col justify-end items-end gap-1.5 z-[200] cursor-pointer'>
 
           <span ref={topLineRef} className='block w-5 h-[2px] bg-white'></span>
 
@@ -115,6 +120,7 @@ function Navbar() {
           </button>
             
           </div>
+         
       </div>
 
     </>

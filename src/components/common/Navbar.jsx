@@ -8,6 +8,8 @@ function Navbar() {
   const [openMenu, setOpenMenu] = useState(false)
 
   const {
+    navbarCtxRef,
+
     menuBgRef,
     mobileMenuOverlayRef,
 
@@ -15,8 +17,7 @@ function Navbar() {
     midLineRef,
     botLineRef,
 
-    clTopLineRef,
-    clBottomLineRef,
+    
 
   } = useNavbarAnimation(openMenu)
 
@@ -24,7 +25,7 @@ function Navbar() {
     <>
 
       {/* NAVBAR */}
-      <nav className='px-4 py-4 fixed top-0 left-0 right-0 z-[997] flex items-center justify-between border border-transparent backdrop-blur-2xl'>
+      <nav ref={navbarCtxRef} className='px-4 py-4 fixed top-0 left-0 right-0 z-[997] flex items-center justify-between border border-transparent backdrop-blur-2xl'>
 
         {/* LOGO */}
         <div className='font-[SyneExtraBold] text-sm'>
@@ -80,41 +81,41 @@ function Navbar() {
 
       {/* MOBILE OVERLAY */}
       
-      <div ref={mobileMenuOverlayRef} className='fixed inset-0 z-[150] pointer-events-none overflow-hidden'>
+      <div ref={mobileMenuOverlayRef} className='fixed inset-0 z-[150] pointer-events-none opacity-0 invisible overflow-hidden'>
 
         {/* EXPANDING BG */}
-        <div ref={menuBgRef} className='absolute top-0 right-0 w-16 h-16 rounded-full bg-[#7c3aed]'></div>
+        <div ref={menuBgRef} className='absolute top-0 right-0 w-16 h-16 rounded-full bg-[#320d57]'></div>
 
         {/* CONTENT */}
         <div className='absolute inset-0 flex flex-col justify-center items-center gap-10 font-[ChunkyPlayful]'>
 
           <div data-cursor='morph'>
-              <AnimatedText className='menu-link text-4xl font-medium tracking-wider'>
+              <AnimatedText className='menu-link text-4xl font-medium tracking-wider -rotate-6'>
                 Features
               </AnimatedText>
           </div>
 
           <div data-cursor='morph'>
-              <AnimatedText className='menu-link text-4xl font-medium tracking-wider'>
+              <AnimatedText className='menu-link text-4xl font-medium tracking-wider -rotate-6'>
                 Gallary
               </AnimatedText>
           </div>
 
           <div data-cursor='morph'>
-              <AnimatedText className='menu-link text-4xl font-medium tracking-wider'>
+              <AnimatedText className='menu-link text-4xl font-medium tracking-wider -rotate-6'>
                 Pricing
               </AnimatedText>
           </div>
 
           <div data-cursor='morph'>
-              <AnimatedText className='menu-link text-4xl font-medium tracking-wider'>
+              <AnimatedText className='menu-link text-4xl font-medium tracking-wider -rotate-6'>
                 Security
               </AnimatedText>
           </div>
             
           <button data-cursor='morph' 
             className='menu-link md:hidden
-            block text-[var(--purple)] font-bold border border-white py-2 px-6 rounded-full'
+            block text-3xl text-white font-bold border border-white py-2 px-6 rounded-full -rotate-6'
             >
               Create Vault
           </button>

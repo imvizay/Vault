@@ -12,17 +12,46 @@ function HeroContent({refs={}}) {
   
   return (
     <>
-    <div 
-    ref={heroTagRef} 
-    className="hero-tag flex items-center gap-3 mb-8 
-              uppercase tracking-[0.3em] text-[11px] opacity-0 text-violet-300 
-              
-              before:content-['']
-              before:block before:w-8 before:h-px before:bg-violet-300 before:opacity-50
+    <div
+      ref={heroTagRef}
+      className="
+        hero-tag
 
-              after:content-['']
-              after:block after:w-8 after:h-px after:bg-violet-300 after:opacity-50
-              ">
+        flex items-center justify-center
+        gap-1 sm:gap-2 md:gap-3
+
+        mb-6 md:mb-8
+
+        uppercase
+
+        tracking-[0.12em]
+        sm:tracking-[0.18em]
+        md:tracking-[0.3em]
+
+        text-[9px]
+        sm:text-[10px]
+        md:text-[11px]
+
+        text-violet-300
+        opacity-0
+
+        px-3
+
+        before:content-['']
+        before:block
+        before:w-4 sm:before:w-6 md:before:w-8
+        before:h-px
+        before:bg-violet-300
+        before:opacity-50
+
+        after:content-['']
+        after:block
+        after:w-4 sm:after:w-6 md:after:w-8
+        after:h-px
+        after:bg-violet-300
+        after:opacity-50
+      "
+    >
 
 
         {"Private Memory Sanctuary".split("").map((char, i) => (
@@ -40,8 +69,12 @@ function HeroContent({refs={}}) {
     {/* HEADING */}
     <h1 
     ref={heroHeadingRef}
-    className='font-[SyneExtraBold] leading-0.92 tracking-[0.03em] text-[clamp(52px,8vw,128px)]
-      overflow-hidden
+    className='
+    font-[SyneExtraBold] 
+    leading-0.92 
+    tracking-[0.03em] 
+    text-[clamp(40px,8vw,128px)]
+    overflow-hidden
      text-white text-5xl'
     >
       <span className='line block overflow-hidden'>
@@ -55,7 +88,7 @@ function HeroContent({refs={}}) {
 
     <p
     ref={heroSubRef}
-    className='hero-sub max-w-[480px] mt-10 mb-14 text-[clamp(15px,2vw,18px)] leading-[1.7] font-light text-zinc-400 opacity-0 translate-y-6' >
+    className='hero-sub max-w-[480px] mt-10 mb-14 text-[clamp(12px,2vw,18px)] leading-[1.7] font-light text-zinc-400 opacity-0 translate-y-6' >
       GalleryVault is your encrypted sanctuary for private photos and videos — beautifully protected, forever yours.
     </p>
 
@@ -63,7 +96,11 @@ function HeroContent({refs={}}) {
 
     <div
     ref={heroActionsRef}
-    className='actions flex items-center justify-center gap-5 opacity-0 translate-y-6'>
+    className='actions flex flex-col items-center justify-center gap-5 opacity-0 translate-y-6
+    
+    md:flex-row
+    '
+    >
 
       <button data-cursor='morph' className='px-10 py-4 rounded-full font-syne text-sm font-bold tracking-[0.04em] bg-gradient-to-br from-violet-500 to-pink-400 shadow-[0_0_40px_rgba(123,94,167,0.4)] 
       transition-all duration-300 

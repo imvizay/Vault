@@ -1,29 +1,25 @@
 import gsap from 'gsap';
-import { useRef,useEffect } from 'react';
+import { useRef,useLayoutEffect,useEffect } from 'react';
 
 function useNavbarAnimation(openMenu) {
+
+    const navbarCtxRef = useRef(null)
 
     // open menu icon
     const topLineRef = useRef(null)
     const midLineRef = useRef(null)
     const botLineRef = useRef(null)
 
-    // close menu icon
-    const clTopLineRef = useRef(null) 
-    const clBottomLineRef = useRef(null) 
-
-
     const mobileMenuOverlayRef = useRef(null)
     const menuBgRef = useRef(null)
 
     const tl = useRef(null)
 
-    useEffect(() => {
+    useLayoutEffect(() => {
+        const ctx = gsap.context(()=>{
+             if(!mobileMenuOverlayRef.current) return
 
-        if(!mobileMenuOverlayRef.current) return
-
-        const menuLinks =
-          mobileMenuOverlayRef.current.querySelectorAll('.menu-link')
+        const menuLinks = gsap.utils.toArray('.menu-link',mobileMenuOverlayRef.current)
 
         if(menuBgRef.current){
             gsap.set(menuBgRef.current,{
@@ -40,8 +36,12 @@ function useNavbarAnimation(openMenu) {
             paused:true
         })
 
+
         tl.current.set(mobileMenuOverlayRef.current,{
-           pointerEvents:'auto'
+           pointerEvents:'auto',
+           visibility:'visible',
+           opacity:1,
+
         })
 
         tl.current.to(menuBgRef.current,{
@@ -55,6 +55,7 @@ function useNavbarAnimation(openMenu) {
             opacity:1,
             stagger:0.08,
             duration:1.6,
+            rotation:0,
             ease:'power3.out'
         },'-=0.7')
 
@@ -77,16 +78,10 @@ function useNavbarAnimation(openMenu) {
             ease:'power3.out'
         },0)
 
-        tl.current.to(clTopLineRef.current,{
-            rotate:45,
-            y:-15
-        },0)
+        },navbarCtxRef)
 
-        tl.current.to(clBottomLineRef.current,{
-            rotate:-45,
-            y:-18
-        },0)
-
+        return () => ctx.revert()
+       
     },[])
 
     useEffect(() => {
@@ -100,25 +95,19 @@ function useNavbarAnimation(openMenu) {
 
             tl.current.reverse()
 
-            tl.current.eventCallback(
-              "onReverseComplete",
-              () => {
+            tl.current.eventCallback( "onReverseComplete", 
+                () => {
 
-                if(mobileMenuOverlayRef.current){
-
-                    gsap.set(
-                      mobileMenuOverlayRef.current,
-                      {
-                        pointerEvents:'none'
-                      }
-                    )
-
-                }
-
+                     gsap.set(
+                       mobileMenuOverlayRef.current,
+                       {
+                         pointerEvents:'none',
+                         opacity:0,
+                         visibility:'hidden'
+                       }
+                     )
             })
-
         }
-
     },[openMenu])
 
     useEffect(() => {
@@ -128,12 +117,11 @@ function useNavbarAnimation(openMenu) {
     },[])
 
     return {
+
+        navbarCtxRef,
         topLineRef,
         midLineRef,
         botLineRef,
-
-        clTopLineRef,
-        clBottomLineRef,
 
         mobileMenuOverlayRef,
         menuBgRef

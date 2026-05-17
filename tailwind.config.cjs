@@ -11,6 +11,7 @@ export default {
   
   theme: {
     extend: {
+ 
       fontFamily: {
         heading: ['Satoshi', 'sans-serif'],
       },

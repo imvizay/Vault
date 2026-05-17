@@ -1,1 +1,15 @@
+/* Marque Section Animatation */
+
+ .marquee-track {
+    display: flex; gap: 0;
+    align-items: center;
+    animation: marqueeAnim 28s linear infinite;
+    width: max-content;
+  }
+
+@keyframes marqueeAnim{
+    from{transform:translateX(0%);}
+    to {transform:translateX(-50%);}    
+}
+
 

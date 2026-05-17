@@ -9,7 +9,8 @@ function HeroCards() {
       position: 'top-[10%] left-[4%] w-[200px] h-[260px]',
       gradient: 'from-[#1a0a2e] to-[#3d1a6e]',
       icon: '🔒',
-      label: 'Private · 2024'
+      label: 'Private · 2024',
+      hidden:true,
     },
 
     {
@@ -17,7 +18,8 @@ function HeroCards() {
       position: 'bottom-[14%] left-[8%] w-[160px] h-[210px]',
       gradient: 'from-[#0a1a2e] to-[#1a3a5c]',
       icon: '🌊',
-      label: 'Encrypted'
+      label: 'Encrypted',
+      hidden:true
     },
 
     {
@@ -25,7 +27,8 @@ function HeroCards() {
       position: 'top-[8%] right-[5%] w-[220px] h-[280px]',
       gradient: 'from-[#1a0a1a] to-[#5c1a3a]',
       icon: '✦',
-      label: 'Memory · Vault'
+      label: 'Memory · Vault',
+      hidden:false
     },
 
     {
@@ -33,7 +36,8 @@ function HeroCards() {
       position: 'bottom-[10%] right-[7%] w-[170px] h-[220px]',
       gradient: 'from-[#0a1a1a] to-[#1a4a4a]',
       icon: '🎞️',
-      label: 'Personal'
+      label: 'Personal',
+      hidden:true
     }
   ]
 
@@ -48,6 +52,8 @@ function HeroCards() {
           <div
             key={card.id}
             className={`hcard
+
+            ${card.hidden ? "hidden" : ''}
             absolute
             ${card.position}
             rounded-3xl
@@ -56,6 +62,8 @@ function HeroCards() {
             backdrop-blur-xl
             shadow-[0_20px_80px_rgba(0,0,0,0.45)]
             bg-white/[0.03]
+
+            md:block
             `}
           >
 

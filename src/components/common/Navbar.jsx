@@ -62,7 +62,7 @@ function Navbar() {
         </ul>
 
         {/* DESKTOP CTA */}
-        <button data-cursor='morph' className='hidden md:block text-[var(--purple)] font-bold border border-white py-2 px-6 rounded-full'>
+        <button data-cursor='morph' className='hidden md:block text-white font-bold border border-gray-300 py-2 px-6 rounded-full bg-black backdrop-blur-2xl'>
           Create Vault
         </button>
 

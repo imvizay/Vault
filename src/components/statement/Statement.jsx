@@ -21,79 +21,52 @@ export default function StatementSection() {
       statement-content
       ">
 
-        <span className="statement-eyebrow mb-12 font-[11px] tracking-[0.3em] 
+        <div className="statement-eyebrow mb-12 font-[11px] tracking-[0.3em] 
         text-[var(--cyan)]">
           The Philosophy
-        </span>
+        </div>
 
         <h2
           className="
             statement-heading
-            perspective-[1000px]
-            mb-12
-            font-[SyneExtraBold]
-            font-bold
-            text-[var(--muted)]
-            text-[clamp(2rem,9vw,6rem)]
-            leading-[0.9]
-            tracking-tight
-            max-w-screen
-          "
-        >
-          <span className="block text-center reveal-line">
+            mb-16 font-[SyneExtraBold] h-fit text-[clamp(1rem,8vw,4rem)] leading-[0.9] tracking-[-0.04em] max-w-[11ch] mx-auto text-center
+          ">
+
+          <span className="block reveal-line">
             Not every
           </span>
 
+          <span className="block reveal-line"> moment</span>
+
           <span className="block reveal-line">
-            moment 
+            is meant to be shared 
           </span>
 
-          <span className="block reveal-line">is</span>
-
-          <span className="block reveal-line glow-text">
-            meant to be
+          <span className="block reveal-line mt-10">
+           - but every moment
           </span>
 
-
-          <span className="block my-10 reveal-line glow-text">shared</span>
-
-          <span className="block reveal-line" >
-             — but every 
-             <em>moment</em>
+          <span
+            className="
+              block reveal-line 
+               text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.18)] drop-shadow-[0_0_30px_rgba(34,211,238,0.12)]">
+            deserves to be treasured.
           </span>
 
-        
-          <span className="block reveal-line">
-            deserves 
-          </span>
-
-          <span className="block reveal-line">to be</span>
-
-          <span className="glow-text
-          bg-gradient-to-b
-          from-white
-          via-white
-          to-cyan-300
-          bg-clip-text
-          text-transparent
-          drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]
-          drop-shadow-[0_0_30px_rgba(34,211,238,0.18)]"
-          >
-            treasured
-          </span>
         </h2>
 
-        <p className="statement-description">
-          
-          <span className="block">
-            In a world of social feeds and fleeting stories,
-            GalleryVault offers something rare: 
-          </span>
+        <p className="
+          statement-description 
 
-          <span className="block">a private sanctuary
+          mt-20 leading-6 text-violet-300/40
+          md:mt-20 md:leading-6 md:text-violet-300/40 md:w-[480px]"
+        >
+          In a world of social feeds and fleeting stories,
+          GalleryVault offers something rare: 
+          a private sanctuary
           where your most intimate memories live — protected by
           military-grade encryption and touched only by you.
-          </span>
+        
         </p>
       </div>
     </section>

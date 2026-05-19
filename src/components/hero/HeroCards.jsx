@@ -53,7 +53,7 @@ function HeroCards() {
             key={card.id}
             className={`hcard
 
-            ${card.hidden ? "hidden" : ''}
+            ${card.hidden ? "opacity-0 md:opacity-100" : ''}
             absolute
             ${card.position}
             rounded-3xl

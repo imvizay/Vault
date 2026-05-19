@@ -1,70 +1,96 @@
+import { useLayoutEffect } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
 
-import {React, useLayoutEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
-gsap.registerPlugin(ScrollTrigger,SplitText)
+gsap.registerPlugin(ScrollTrigger, SplitText)
+
 function useStatementAnimation(statementRef) {
 
-    useLayoutEffect(()=>{
+  useLayoutEffect(() => {
 
-        const ctx = gsap.context( () => {
+    const ctx = gsap.context(() => {
 
-            // selected all line reveal
-            const lines = gsap.utils.toArray('.reveal-line')
-                    
-                        
-            lines.forEach((line) => {
-            const split = new SplitText(line, {
-                type: "chars"
-            })
-          
-            gsap.set(split.chars, {
-                opacity: 0,
-                yPercent: 120,
-                scaleY: 1.8,
-                scaleX: 0.7,
-                filter: "blur(12px)",
-                rotateX: -90,
-                transformOrigin: "50% 100%",
-                willChange: "transform, opacity, filter"
-            })
-          
-            gsap.to(split.chars, {
-                opacity: 1,
-                yPercent: 0,
-                scaleY: 1,
-                scaleX: 1,
-                rotateX: 0,
-                filter: "blur(0px)",
-                duration: 1.8,
-            
-                stagger: {
-                  each: 0.015,
-                  from: "random"
-                },
-            
-                ease: "expo.out",
-            
-                scrollTrigger: {
-                  trigger: line,
-                  start: "top 92%",
-                  end: "top 45%",
-                  scrub: 1.2,
-                  markers: false
-                }
-            })
-            })
+      const lines = gsap.utils.toArray('.reveal-line')
 
+      lines.forEach((line) => {
 
+        const split = new SplitText(line, {
+          type: 'chars'
+        })
 
+        gsap.set(split.chars, {
+          opacity: 0,
+          y: 40,
+          filter: 'blur(8px)',
+          willChange: 'transform, opacity'
+        })
 
-        },statementRef)
+        gsap.to(split.chars, {
 
+          opacity: 1,
+          y: 0,
+          filter: 'blur(0px)',
+
+          duration: 1.4,
+
+          stagger: 0.025,
+
+          ease: 'power3.out',
         
-        return () => ctx.revert()
-    },[])
+          scrollTrigger: {
+            trigger: line,
+            start: 'top 88%',
+            toggleActions: 'play none none reverse',
+          }
+
+        })
+
+      })
+
+      // description paragraph
+
+      gsap.from('.statement-description', {
+
+        opacity: 0,
+        y: 30,
+
+        duration: 1.6,
+
+        ease: 'power3.out',
+
+        scrollTrigger: {
+          trigger: '.statement-description',
+          start: 'top 90%',
+          toggleActions: 'play none none reverse',
+        }
+
+      })
+
+      // eyebrow
+
+      gsap.from('.statement-eyebrow', {
+
+        opacity: 0,
+        y: 12,
+
+        duration: 1,
+
+        ease: 'power2.out',
+
+        scrollTrigger: {
+          trigger: '.statement-eyebrow',
+          start: 'top 92%',
+        }
+
+      })
+
+    }, statementRef)
+
+    return () => ctx.revert()
+
+  }, [])
 
 }
 
-export default useStatementAnimation    
+export default useStatementAnimation

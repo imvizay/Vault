@@ -8,6 +8,7 @@ import Cursor from './components/cursor/Cursor';
 import Hero from './components/hero/Hero';
 import Marque from './components/marque/Marque';
 import Statement from './components/statement/Statement';
+import FeaturesSection from './components/features/Features';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <Hero/>
       <Marque/>
       <Statement/>
+      <FeaturesSection/>
     </>
     
   )

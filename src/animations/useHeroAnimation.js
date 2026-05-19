@@ -61,30 +61,7 @@ function useHeroAnimation({
 
       const hcards = gsap.utils.toArray('.hcard')
 
-      /* FLOATING LOOP */
-      hcards.forEach((card,i) => {
-
-        gsap.to(card,{
-
-          y:gsap.utils.random(-40,20),
-          x:gsap.utils.random(-8,8),
-          rotation:gsap.utils.random(-4,4),
-
-          duration:gsap.utils.random(3,5),
-
-          repeat:-1,
-          yoyo:true,
-
-          ease:'sine.inOut',
-
-          delay:i * 0.2,
-        
-        })
-      })
-
-
       // MASTER HERO TIMELINE ENTRY
-
       const heroIntroTimeline = gsap.timeline({
         delay:0.2
       })
@@ -103,6 +80,27 @@ function useHeroAnimation({
        
         ease:'power4.out',
        
+      })
+
+       /* FLOATING LOOP */
+      hcards.forEach((card,i) => {
+
+        gsap.to(card,{
+
+          y:gsap.utils.random(-40,20),
+          x:gsap.utils.random(-8,8),
+          rotation:gsap.utils.random(-4,4),
+
+          duration:gsap.utils.random(3,5),
+
+          repeat:-1,
+          yoyo:true,
+          
+          ease:'sine.inOut',
+
+          delay:i * 0.2,
+        
+        })
       })
 
       // hero tag container

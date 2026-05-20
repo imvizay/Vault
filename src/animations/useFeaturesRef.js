@@ -40,7 +40,6 @@ export default function useFeaturesRef(featuresRef) {
                         trigger: word,
                         start: 'top 85%',
                         end: 'bottom 90%',
-                        markers: true
                     }
                 })
             })    

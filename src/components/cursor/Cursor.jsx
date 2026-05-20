@@ -46,6 +46,8 @@ function Cursor() {
     morphTargets.forEach(element => {
 
       const mouseenter = () => {
+        gsap.killTweensOf(cursorRef.current)
+        gsap.killTweensOf(glowRef.current)
 
         isMorphing.current = true
 
@@ -58,9 +60,9 @@ function Cursor() {
         })
 
         gsap.to(glowRef.current, {
-          width: rect.width + 15,
-          height: rect.height + 7.5,
-      
+          width: (rect.width + 20),
+          height: (rect.height + 10),
+          
           backgroundColor:"rgba(168,85,247,0.08)",
           borderColor:"rgba(168,85,247,0.3)",
 
@@ -72,11 +74,13 @@ function Cursor() {
           duration: 0.35,
           ease: 'power2.out',
 
-          overwrite:'auto'
+          overwrite:true
         })
       }
 
       const mouseleave = () => {
+        gsap.killTweensOf(cursorRef.current)
+        gsap.killTweensOf(glowRef.current)
 
         isMorphing.current = false
 
@@ -89,11 +93,13 @@ function Cursor() {
         gsap.to(glowRef.current, {
           width: 40,
           height: 40,
+  
           borderRadius: 999,
           backgroundColor:"",
 
           duration: 0.55,
           ease: 'power4.out',
+          overwrite:true
         })
       }
 

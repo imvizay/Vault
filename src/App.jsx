@@ -1,25 +1,29 @@
 import React from 'react'
-import './App.css'
-import './index.css'
+import '@/App.css'
+import '@/index.css'
+
+// cursor
+
+import Cursor from '@components/cursor/Cursor'
 
 // component
-import Navbar from './components/common/Navbar';
-import Cursor from './components/cursor/Cursor';
-import Hero from './components/hero/Hero';
-import Marque from './components/marque/Marque';
-import Statement from './components/statement/Statement';
-import FeaturesSection from './components/features/Features';
+import AuthPage from '@components/auth/Register';
+import AppRoutes from '@routes/AppRoutes';
+
 
 export default function App() {
   return (
     
     <>
-      <Navbar/>
+     
+     {/* Global Cursor Custom Component For Cursor Interaction */}
       <Cursor/>
-      <Hero/>
-      <Marque/>
-      <Statement/>
-      <FeaturesSection/>
+      
+      {/* All Routes Centralized Inside This Component
+      Whether Public,Users,Admin 
+      */}
+      <AppRoutes/>
+
     </>
     
   )

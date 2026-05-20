@@ -1,14 +1,24 @@
 import React,{lazy} from 'react'
-import MainLayout from '@layouts/MainLayout';
+
 import { Routes,Route } from 'react-router-dom';
-import AuthLayout from '@layouts/AuthLayout';
-import AccessVault from '@components/auth/Login';
-import CreateVault from '@components/auth/Register';
+
+// LAYOUTS
+import MainLayout from '@layouts/MainLayout';
 import UserDashboardLayout from '@layouts/UserDashboardLayout';
-import ProtectedRoutes from '@routes/ProtectedRoutes';
+import AuthLayout from '@layouts/AuthLayout';
+
+// INVALID OR UNAUTHORIZED ROUTES
 import Unauthorized from './unauthorized_invalid_routes/Unauthorized';
 import NotFound from './unauthorized_invalid_routes/Invalid';
 
+// AUTH ROUTES
+import Login from '../components/auth/Login';
+import Register from '../components/auth/Register';
+
+// PROTECTED COMPONENTS
+import ProtectedRoutes from '@routes/ProtectedRoutes';
+
+// BASE LANDING COMPONENT
 const Home = lazy( () => import('@pages/public/Home'))
 
 function AppRoutes() {
@@ -25,8 +35,8 @@ function AppRoutes() {
 
       {/* AUTH ROUTES */}
       <Route element={<AuthLayout/>}>
-        <Route path='/login' element={<AccessVault/>}/>
-        <Route path='/register' element={<CreateVault/>}/>
+        <Route path='/login' element={<Login/>}/>
+        <Route path='/register' element={<Register/>}/>
       </Route>
 
       {/* CLIENT ROUTES */}

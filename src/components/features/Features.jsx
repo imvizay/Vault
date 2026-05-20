@@ -1,7 +1,7 @@
 import React,{ useRef } from 'react'
 
 import { LockIcon,Globe,Camera,Timer } from 'lucide-react'
-import useFeaturesRef from '../../animations/useFeaturesRef'
+import useFeaturesRef from '@animations/useFeaturesRef'
 
 
 function Features() {
@@ -58,7 +58,7 @@ function Features() {
         {/* Eye Brow */}
         <div
           className="
-          w-[360px] 
+          
           
           relative flex gap-2 justify-center items-center gap-2text-[11px] tracking-[0.35em] uppercase 
 

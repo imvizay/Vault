@@ -5,7 +5,7 @@ import HeroCards from './HeroCards'
 import HeroContent from './HeroContent'
 import ScrollHint from './ScrollHint'
 
-import useHeroAnimation from '../../animations/useHeroAnimation'
+import useHeroAnimation from '@animations/useHeroAnimation'
 
 function Hero() {
     

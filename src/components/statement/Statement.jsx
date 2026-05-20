@@ -1,7 +1,7 @@
 // StatementSection.jsx
 
 import React, { useRef } from "react";
-import useStatementAnimation from "../../animations/useStatementAnimation";
+import useStatementAnimation from "@animations/useStatementAnimation";
 
 export default function StatementSection() {
   const statementRef = useRef(null)

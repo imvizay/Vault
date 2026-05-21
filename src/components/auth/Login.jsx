@@ -1,20 +1,37 @@
-// Login.jsx
 
 import React from 'react'
+
+// ICONS
 import { Eye, Mail, Lock, ArrowRight, ArrowLeft } from 'lucide-react'
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faGithub,faGoogle,faFacebook} from '@fortawesome/free-brands-svg-icons';
 
-import {
-  faGithub,
-  faGoogle,
-  faFacebook
-} from '@fortawesome/free-brands-svg-icons';
-
+// NAVIGATE
 import { useNavigate } from 'react-router-dom';
+
+// REACT FORM AND ZOD
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 export default function Login() {
   const navigate = useNavigate()
+
+  const {register,
+    handleSubmit,
+    clearErrors,
+    formState:{
+      isSubmitting,
+      errors
+    }
+  } = useForm()
+
+
+
+  const onAccessvault = (data) => {
+    console.log(data)
+  }
+
 
   return (
 
@@ -115,8 +132,8 @@ export default function Login() {
               Back
             </button>
 
-            <button className='text-[12px] sm:text-[13px] border border-violet-300/40 rounded-2xl py-2.5 px-4 sm:px-5 text-violet-300 hover:text-black hover:bg-white/60 transition-colors whitespace-nowrap'>
-              Create Vault
+            <button onClick={()=>navigate('/register')} className='text-[12px] sm:text-[13px] border border-violet-300/40 rounded-2xl py-2.5 px-4 sm:px-5 text-violet-300 hover:text-black hover:bg-white/60 transition-colors whitespace-nowrap'>
+              REGISTER
             </button>
 
           </div>
@@ -211,7 +228,7 @@ export default function Login() {
 
           {/* FORM */}
 
-          <form className='space-y-2 md:space-y-4'>
+          <form onSubmit={handleSubmit(onAccessvault)} className='space-y-2 md:space-y-4'>
 
             {/* EMAIL */}
 
@@ -221,7 +238,9 @@ export default function Login() {
                 <Mail size={16} className='text-violet-200/35' />
               </div>
 
-              <input type='email' placeholder='Email Address' className='w-full bg-transparent outline-none border-none py-4 pl-12 pr-4 text-[13px] sm:text-[14px] text-white placeholder:text-violet-200/25' />
+              <input {...register('email')}
+              
+              type='email' placeholder='Email Address' className='w-full bg-transparent outline-none border-none py-4 pl-12 pr-4 text-[13px] sm:text-[14px] text-white placeholder:text-violet-200/25' />
 
             </div>
 
@@ -233,7 +252,7 @@ export default function Login() {
                 <Lock size={16} className='text-violet-200/35' />
               </div>
 
-              <input type='password' placeholder='Password' className='w-full bg-transparent outline-none border-none py-4 pl-12 pr-12 text-[13px] sm:text-[14px] text-white placeholder:text-violet-200/25' />
+              <input {...register('password')} type='password' placeholder='Password' className='w-full bg-transparent outline-none border-none py-4 pl-12 pr-12 text-[13px] sm:text-[14px] text-white placeholder:text-violet-200/25' />
 
               <button type='button' className='absolute right-4 top-1/2 -translate-y-1/2'>
                 <Eye size={16} className='text-violet-200/30' />

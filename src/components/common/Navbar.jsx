@@ -2,10 +2,11 @@ import '../../App.css'
 import React, { useState } from 'react'
 import AnimatedText from '../ui/AnimatedText'
 import useNavbarAnimation from '../../animations/useNavbarAnimation'
-
+import { useNavigate  } from 'react-router-dom'
 function Navbar() {
 
   const [openMenu, setOpenMenu] = useState(false)
+  const navigate = useNavigate()
 
   const {
     navbarCtxRef,
@@ -62,7 +63,7 @@ function Navbar() {
         </ul>
 
         {/* DESKTOP CTA */}
-        <button data-cursor='morph' className='hidden md:block text-white font-bold border border-gray-300 py-2 px-6 rounded-full bg-black backdrop-blur-2xl'>
+        <button onClick={ () => navigate('/login')}  className='hidden md:block text-white font-bold border border-gray-300 py-2 px-6 rounded-full bg-black backdrop-blur-2xl'>
           Create Vault
         </button>
 

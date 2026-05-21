@@ -21,10 +21,15 @@ import ProtectedRoutes from '@routes/ProtectedRoutes';
 // BASE LANDING COMPONENT
 const Home = lazy( () => import('@pages/public/Home'))
 
+// CURSOR
+import Cursor from '@components/cursor/Cursor'
+
 function AppRoutes() {
   return (
     <>
+    <Cursor/>
      <Routes>
+       
      
       <Route path='*' element={<NotFound/>}/>
 

@@ -2,23 +2,74 @@
 
 import React from 'react'
 
-import {
-  User,
-  Mail,
-  Lock,
-  ArrowRight,
-  ArrowLeft
-} from 'lucide-react'
-
+// ICONS
+import {User,Mail,Lock,ArrowRight,ArrowLeft} from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faGithub,faGoogle,faFacebook} from '@fortawesome/free-brands-svg-icons'
 
-import {
-  faGithub,
-  faGoogle,
-  faFacebook
-} from '@fortawesome/free-brands-svg-icons'
+// NAVIGATE ROUTE
+import { useNavigate } from 'react-router-dom'
+
+// REACT FORM AND ZOD
+import{ useForm } from 'react-hook-form';
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod';
+
+
+// validation of form fields using z resolver
+const schema = z.object({
+
+  fullname:z
+          .string()
+          .min(4,'Min 04 charaacter')
+          .max(16,"Max 16 character")
+          .regex(
+            /^(?!\d+$)[a-zA-Z0-9_]+$/,
+            "Username cannot contain only numbers"
+          ),
+
+  email:z
+        .string()
+        .email("Invalid Email"),
+
+  password:z
+          .string()
+          .min(4,'minimum 6 character')
+          .max(8,'maximum 08 character password'),
+
+  confirm_password:z
+          .string()
+          .min(4,'minimum 6 character')
+          .max(8,'maximum 08 character password'),
+
+}).refine((data) => data.password === data.confirm_password, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+
+
 
 export default function Register() {
+
+  const navigate = useNavigate()
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState:{
+      errors,
+      isSubmitting
+    }
+  } = useForm({
+    resolver:zodResolver(schema)
+  })
+
+
+  const onVaultCreate = (data) => {
+    console.log(data)
+
+  }
 
   return (
 
@@ -116,13 +167,13 @@ export default function Register() {
 
           <div className='flex items-center justify-between gap-4 mb-4'>
 
-            <button className='flex items-center gap-2 text-violet-200/45 hover:text-white transition-all duration-300 text-[12px] sm:text-[13px] tracking-[0.08em] uppercase'>
+            <button onClick={ () => navigate('/')} className='flex items-center gap-2 text-violet-200/45 hover:text-white transition-all duration-300 text-[12px] sm:text-[13px] tracking-[0.08em] uppercase'>
               <ArrowLeft size={15} />
               Back
             </button>
 
             <button className='px-5 sm:px-7 py-2.5 sm:py-3 rounded-[10px] border border-violet-200/40 text-white text-[13px] sm:text-[15px] hover:bg-white/5 transition-all duration-300 whitespace-nowrap'>
-              Login
+              LOGIN
             </button>
 
           </div>
@@ -218,7 +269,7 @@ export default function Register() {
 
           {/* FORM */}
 
-          <form className='space-y-4'>
+          <form onSubmit={handleSubmit(onVaultCreate)} className='space-y-4'>
 
             {/* FULLNAME */}
 
@@ -228,7 +279,11 @@ export default function Register() {
                 <User size={18} className='text-violet-200/35' />
               </div>
 
-              <input type='text' placeholder='Full Name' className='w-full bg-transparent outline-none border-none py-3 lg:py-5 pl-14 pr-5 text-[14px] sm:text-[15px] text-white placeholder:text-violet-200/25' />
+              <input {...register('fullname')}
+               
+              type='text' placeholder='Full Name' className='w-full bg-transparent outline-none border-none py-3 lg:py-5 pl-14 pr-5 text-[14px] sm:text-[15px] text-white placeholder:text-violet-200/25' />
+
+              <p>{errors.fullname?.message}</p>
 
             </div>
 
@@ -240,8 +295,11 @@ export default function Register() {
                 <Mail size={18} className='text-violet-200/35' />
               </div>
 
-              <input type='email' placeholder='Email Address' className='w-full bg-transparent outline-none border-none py-3 lg:py-5 pl-14 pr-5 text-[14px] sm:text-[15px] text-white placeholder:text-violet-200/25' />
+              <input {...register('email')}
+              
+              type='email' placeholder='Email Address' className='w-full bg-transparent outline-none border-none py-3 lg:py-5 pl-14 pr-5 text-[14px] sm:text-[15px] text-white placeholder:text-violet-200/25' />
 
+               <p>{errors.email?.message}</p>
             </div>
 
             {/* PASSWORDS */}
@@ -254,8 +312,10 @@ export default function Register() {
                   <Lock size={18} className='text-violet-200/35' />
                 </div>
 
-                <input type='password' placeholder='Password' className='w-full bg-transparent outline-none border-none py-3 lg:py-5 pl-14 pr-5 text-[14px] sm:text-[15px] text-white placeholder:text-violet-200/25' />
-
+                <input 
+                {...register('password')}
+                type='password' placeholder='Password' className='w-full bg-transparent outline-none border-none py-3 lg:py-5 pl-14 pr-5 text-[14px] sm:text-[15px] text-white placeholder:text-violet-200/25' />
+                 <p>{errors.password?.message}</p>
               </div>
 
               <div className='relative rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden'>
@@ -264,7 +324,7 @@ export default function Register() {
                   <Lock size={18} className='text-violet-200/35' />
                 </div>
 
-                <input type='password' placeholder='Confirm Password' className='w-full bg-transparent outline-none border-none py-3 lg:py-5 pl-14 pr-5 text-[14px] sm:text-[15px] text-white placeholder:text-violet-200/25' />
+                <input {...register('confirm_password')} type='password' placeholder='Confirm Password' className='w-full bg-transparent outline-none border-none py-3 lg:py-5 pl-14 pr-5 text-[14px] sm:text-[15px] text-white placeholder:text-violet-200/25' />
 
               </div>
 
@@ -293,7 +353,9 @@ export default function Register() {
               <div className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-violet-500/10 to-cyan-500/10' />
 
               <span className='relative z-10 flex items-center justify-center gap-3'>
-                Create Vault
+
+                { isSubmitting ? "Creating Vault": "Create Vault"}
+
                 <ArrowRight size={15} className='transition-transform duration-500 group-hover:translate-x-1' />
               </span>
 

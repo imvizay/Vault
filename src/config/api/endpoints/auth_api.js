@@ -2,8 +2,13 @@ import http from "../httpclient"
 
 
 // Register.jsx component making this req.
-export const registerClient = (payload) => {
-    return http.post('/auth/register',payload)
+export const registerUser = (credentials,) => {
+    const token = credentials.user.getIdToken
+    return http.post('/auth/register',credentials,{
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    })
 }
 
 // Login.jsx component making this req

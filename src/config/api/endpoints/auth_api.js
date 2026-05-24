@@ -1,10 +1,11 @@
+import { config } from "zod"
 import http from "../httpclient"
 
 
 // Register.jsx component making this req.
-export const registerUser = (credentials,) => {
-    const token = credentials.user.getIdToken
-    return http.post('/auth/register',credentials,{
+export const registerUser = (token) => {
+    
+    return http.post('/auth/sync',{},{
         headers:{
             Authorization:`Bearer ${token}`
         }
@@ -12,11 +13,11 @@ export const registerUser = (credentials,) => {
 }
 
 // Login.jsx component making this req
-export const loginUser = (payload) => {
-    return http.post('/auth/login',payload)
+export const loginUser = () => {
+    return http.post('/auth/login')
 }
 
 // Verify Current User
-export const validateMe = (payload) => {
-    return http.post('/auth/me',payload)
+export const validateMe = () => {
+    return http.post('/auth/me')
 }

@@ -1,15 +1,32 @@
-import api from "./axios";
+import api from "./axios"
+
+import { auth } from "../firebase/firebase"
+
 
 api.interceptors.request.use(
-    (config) => {
-        const token = user.getIdToken() // firebase access token
 
-        if(token){
-            config.headers.Authorization = `Bearer ${token}`
+    async (config) => {
+        console.log("INTERCEPTOR RUNNING...")
+
+        const user = auth.currentUser
+
+        console.log("CURRENT USER:", user)
+
+        if (user) {
+
+            const token = await user.getIdToken();
+
+            console.log("TOKEN",token)
+
+            config.headers.Authorization = `Bearer ${token}`;
         }
-        return config
-    }, 
+
+        return config;
+
+    },
+
     (error) => {
+
         return Promise.reject(error)
     }
 )
@@ -18,15 +35,19 @@ api.interceptors.request.use(
 api.interceptors.response.use(
 
     (response) => {
-        return response.data;
+
+        return response.data
     },
 
     (error) => {
-        if(error === "ECONNABORTED"){
-            console.error("Request timed out. Please try again.");
-            return;
+
+        if (error.code === "ECONNABORTED") {
+
+            console.error("Request timed out. Please try again.")
         }
-        console.log("AXIOS ERROR:",error);
-        return;
+
+        console.log("AXIOS ERROR:",error)
+
+        return Promise.reject(error)
     }
 )

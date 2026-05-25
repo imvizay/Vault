@@ -25,7 +25,10 @@ import { registerWithFirebase } from '../../config/firebase/firebase_auth';
 // Social Auth
 import { GoogleAuthProvider,FacebookAuthProvider } from 'firebase/auth';
 import { socialAuth } from '../../config/firebase/firebase_auth'
-import { facebookProvider, googleProvider } from '../../config/firebase/firebase'
+import { facebookProvider, googleProvider } from '../../config/firebase/firebase';
+
+// useUser 
+import { useUser } from '../../contexts/UserContext'
 
 
   // FRONTEND FORM VALIDATION USING ZOD
@@ -64,6 +67,7 @@ import { facebookProvider, googleProvider } from '../../config/firebase/firebase
 export default function Register() {
 
   const navigate = useNavigate()
+  const { loginUser } = useUser()
   const {
     register,
     handleSubmit,
@@ -90,9 +94,9 @@ export default function Register() {
       try{
       
         const firebaseUser = await registerWithFirebase(data.email,data.password)
-        const token = firebaseUser.getIdToken
+        const token = firebaseUser.getIdToken()
         userMutation.mutate(token)
-      
+        loginUser(firebaseUser)
       } 
       
       catch(error){
@@ -100,11 +104,11 @@ export default function Register() {
         console.log("ERROR CODE:",error.code)
           
           if(error.code == 'auth/email-already-in-use'){
-          
+
               alert("Account already exits please login.")
           
             }
-          
+            loginUser(null)
             navigate('/login')
       }
   }
@@ -119,17 +123,16 @@ export default function Register() {
         console.log("TOKEN:",token)
 
         userMutation.mutate(token)
+        loginUser(result.user)
 
         // backend api call to create user of this mail
      }
 
      catch(eror){
-        console.log("ERR_NAME:",console.error.name);
+        console.log("ERR_NAME:",error.name);
         console.log("ERR_ERROR:",console.error);
+        loginUser(null)
      }
-
-      
-
   }
 
   return (

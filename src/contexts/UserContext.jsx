@@ -29,7 +29,7 @@ export const UserProvider = ({ children }) => {
 
         localStorage.setItem(
             'user',
-            JSON.stringify(u)
+            JSON.stringify(u.email)
         );
 
         setUser(u);

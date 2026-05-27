@@ -2,11 +2,14 @@ import '../../App.css'
 import React, { useState } from 'react'
 import AnimatedText from '../ui/AnimatedText'
 import useNavbarAnimation from '../../animations/useNavbarAnimation'
-import { useNavigate  } from 'react-router-dom'
+import { useNavigate  } from 'react-router-dom';
+import { useUser } from '../../contexts/UserContext';
+
 function Navbar() {
 
   const [openMenu, setOpenMenu] = useState(false)
   const navigate = useNavigate()
+  const {user} = useUser()
 
   const {
     navbarCtxRef,
@@ -21,6 +24,13 @@ function Navbar() {
     
 
   } = useNavbarAnimation(openMenu)
+
+  const normalizeUsername = (user) => {
+    let username = user.split('@')[0]
+    username = username.charAt(0).toUpperCase() + username.slice(1)
+    username = username.replace(/[0-9]+$/,'')
+    return username
+  }
 
   return (
     <>
@@ -63,9 +73,13 @@ function Navbar() {
         </ul>
 
         {/* DESKTOP CTA */}
+        {!user ?  
+        
         <button onClick={ () => navigate('/login')}  className='hidden md:block text-white font-bold border border-gray-300 py-2 px-6 rounded-full bg-black backdrop-blur-2xl'>
           Create Vault
-        </button>
+        </button> :
+        normalizeUsername(user)
+        }
 
         {/* MOBILE HAMBURGER */}
         <div onClick={() => setOpenMenu( p => !p )} className='md:hidden flex flex-col justify-end items-end gap-1.5 z-[200] cursor-pointer'>

@@ -125,7 +125,7 @@ export default function Register() {
         userMutation.mutate(token)
         loginUser(result.user)
 
-        // backend api call to create user of this mail
+        navigate('/login')
      }
 
      catch(eror){

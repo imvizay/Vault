@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Unauthorized from '@routes/unauthorized_invalid_routes/Unauthorized';
+import { useUser } from '../contexts/UserContext';
 
 function ProtectedRoutes({children,allowedRole=[]}) {
 

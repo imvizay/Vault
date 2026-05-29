@@ -21,6 +21,8 @@ import { registerUser } from '../../config/api/endpoints/auth_api'
 
 // Firebase register function
 import { registerWithFirebase } from '../../config/firebase/firebase_auth';
+import { doc, setDoc } from "firebase/firestore"
+import { db } from '../../config/firebase/firebase'
 
 // Social Auth
 import { GoogleAuthProvider,FacebookAuthProvider } from 'firebase/auth';
@@ -29,6 +31,9 @@ import { facebookProvider, googleProvider } from '../../config/firebase/firebase
 
 // useUser 
 import { useUser } from '../../contexts/UserContext'
+
+// utils
+import { deriveMasterKey } from '../../utilis/deriveMasterKey'
 
 
   // FRONTEND FORM VALIDATION USING ZOD
@@ -88,30 +93,120 @@ export default function Register() {
     mutationFn: (token) => registerUser(token)
   })
 
-  // handle registration 
   const onVaultCreate = async (data) => {
 
-      try{
-      
-        const firebaseUser = await registerWithFirebase(data.email,data.password)
-        const token = firebaseUser.getIdToken()
-        userMutation.mutate(token)
-        loginUser(firebaseUser)
-      } 
-      
-      catch(error){
-          
-        console.log("ERROR CODE:",error.code)
-          
-          if(error.code == 'auth/email-already-in-use'){
+  console.group("VAULT REGISTRATION")
 
-              alert("Account already exits please login.")
-          
-            }
-            loginUser(null)
-            navigate('/login')
+  try {
+
+    console.time("TOTAL_REGISTRATION")
+
+    // STEP 1
+    console.log("[1] Generating Salt")
+
+    const saltBytes = crypto.getRandomValues(
+      new Uint8Array(16)
+    )
+
+    const salt = btoa(
+      String.fromCharCode(...saltBytes)
+    )
+
+    console.log("[1] Salt Generated")
+
+
+    // STEP 2
+    console.log("[2] Creating Firebase Account")
+
+    console.time("FIREBASE_ACCOUNT")
+
+    const firebaseUser = await registerWithFirebase(
+      data.email,
+      data.password
+    )
+
+    console.timeEnd("FIREBASE_ACCOUNT")
+
+    console.log(
+      "[2] Firebase Account Created",
+      firebaseUser.uid
+    )
+
+
+    // STEP 3
+    console.log("[3] Saving Salt")
+
+    console.time("SAVE_SALT")
+
+    await setDoc(
+      doc(
+        db,
+        "users",
+        firebaseUser.uid
+      ),
+      {
+        salt,
+        createdAt: Date.now()
       }
+    )
+
+    console.timeEnd("SAVE_SALT")
+
+    console.log("[3] Salt Saved")
+
+
+    // STEP 4
+    console.log("[4] Getting Token")
+
+    console.time("TOKEN")
+
+    const token = await firebaseUser.getIdToken()
+
+    console.timeEnd("TOKEN")
+
+    console.log("[4] Token Received")
+
+
+    // STEP 5
+    console.log("[5] Register Backend")
+
+    userMutation.mutate(token)
+
+    console.log("[5] Backend Registration Started")
+
+
+    // STEP 6
+    console.log("[6] Login User")
+
+    loginUser(firebaseUser)
+
+    console.log("[6] User Logged In")
+
+    console.timeEnd("TOTAL_REGISTRATION")
+
   }
+  catch(error){
+
+    console.error(
+      "REGISTRATION FAILED",
+      error
+    )
+
+    console.error(
+      "ERROR CODE:",
+      error?.code
+    )
+
+    console.error(
+      "ERROR MESSAGE:",
+      error?.message
+    )
+
+  }
+  finally{
+    console.groupEnd()
+  }
+}
 
   // handle Social Auth
   const handleSocialAuthVerification = async (provider) => {
@@ -162,7 +257,7 @@ export default function Register() {
               Back
             </button>
 
-            <button className='px-5 sm:px-7 py-2.5 sm:py-3 rounded-[10px] border border-violet-200/40 text-white text-[13px] sm:text-[15px] hover:bg-white/5 transition-all duration-300 whitespace-nowrap'>
+            <button onClick={()=>navigate('/login')} className='px-5 sm:px-7 py-2.5 sm:py-3 rounded-[10px] border border-violet-200/40 text-white text-[13px] sm:text-[15px] hover:bg-white/5 transition-all duration-300 whitespace-nowrap'>
               LOGIN
             </button>
 

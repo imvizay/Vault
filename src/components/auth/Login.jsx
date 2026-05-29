@@ -14,10 +14,25 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
+// FIREBASE LOGIN
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { googleProvider,facebookProvider,githubProvider } from '../../config/firebase/firebase.js';
+
+import {doc,getDoc} from 'firebase/firestore'
+import {db} from '../../config/firebase/firebase.js'
+
+// UTILS
+import { deriveMasterKey } from '../../utilis/deriveMasterKey.js';
+import { loginInWithFirebase } from '../../config/firebase/firebase_auth.js';
+
+import { useUser } from '../../contexts/UserContext.jsx';
+
+
 export default function Login() {
   const navigate = useNavigate()
+  const {setMasterKey} = useUser()
 
-  const {register,
+  const {register,  
     handleSubmit,
     clearErrors,
     formState:{
@@ -28,8 +43,31 @@ export default function Login() {
 
 
 
-  const onAccessvault = (data) => {
-    console.log(data)
+  const onAccessvault = async (data) => {
+    try{
+      console.group("LOGIN FUNCTION STARTED")
+      
+     
+      const {user,salt} = await loginInWithFirebase(data.email,data.password)
+      console.log('[1] User authenticated')
+
+      const masterKey = await deriveMasterKey(data.password,salt)
+       console.log('[2] Master Key Generated')
+
+      setMasterKey(masterKey)
+      
+      console.log("MASTER KEY:",masterKey)
+      console.log("USER:",user)
+      navigate('/user/dashboard')
+
+
+      console.groupEnd()
+
+    }
+    catch(error){
+      console.log("ERROR LOGIN:",error)
+      alert("FAIL")
+    }
   }
 
 
@@ -37,87 +75,7 @@ export default function Login() {
 
     <section className='w-full min-h-screen overflow-hidden bg-[#05010f] flex items-center justify-center p-3 sm:p-5 lg:p-6 relative'>
 
-      {/* BACKGROUND */}
-
-      <div className='absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(168,85,247,0.14),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(34,211,238,0.10),transparent_30%)]' />
-
-      <div className='absolute top-[10%] left-[8%] w-[220px] sm:w-[320px] h-[220px] sm:h-[320px] rounded-full bg-violet-500/10 blur-[120px]' />
-
-      <div className='absolute bottom-[5%] right-[8%] w-[200px] sm:w-[280px] h-[200px] sm:h-[280px] rounded-full bg-cyan-500/10 blur-[120px]' />
-
-      {/* CARD */}
-
-      <div className='relative z-10 w-full max-w-[1380px] lg:h-[90vh] grid lg:grid-cols-[1fr_1.08fr] rounded-[2rem] lg:rounded-[2.5rem] overflow-hidden border border-white/10 bg-white/[0.03] backdrop-blur-2xl shadow-[0_20px_120px_rgba(0,0,0,0.55)]'>
-
-        {/* LEFT PANEL */}
-
-        <div className='relative hidden lg:flex flex-col justify-between border-r border-white/10 p-8 xl:p-10 overflow-hidden'>
-
-          <div className='absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(168,85,247,0.15),transparent_40%)]' />
-
-          <div className='relative z-10'>
-
-            {/* LOGO */}
-
-            <div className='text-[18px] font-[SyneExtraBold] tracking-[-0.05em] bg-gradient-to-r from-violet-200 via-pink-200 to-cyan-200 bg-clip-text text-transparent mb-10'>
-              GalleryVault
-            </div>
-
-            {/* LABEL */}
-
-            <div className='uppercase tracking-[0.32em] text-[10px] text-violet-200/35 mb-6'>
-              Private by Design
-            </div>
-
-            {/* HEADING */}
-
-            <h1 className='max-w-[540px] font-[SyneExtraBold] leading-[0.84] tracking-[-0.07em] text-[clamp(2.8rem,4vw,4.5rem)] mb-8'>
-
-              <span className='block text-white'>
-                Protect what
-              </span>
-
-              <span className='block bg-gradient-to-r from-violet-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent'>
-                matters most.
-              </span>
-
-            </h1>
-
-            {/* DESCRIPTION */}
-
-            <p className='max-w-[420px] text-[15px] leading-8 text-violet-100/40'>
-              Private encrypted vaults designed to preserve your memories securely.
-            </p>
-
-          </div>
-
-          {/* SECURITY */}
-
-          <div className='relative z-10 rounded-[1.5rem] border border-white/10 bg-white/[0.04] backdrop-blur-xl p-4'>
-
-            <div className='relative z-10 flex items-center gap-4'>
-
-              <div className='w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-400/20 flex items-center justify-center'>
-                <Lock size={20} className='text-violet-300' />
-              </div>
-
-              <div>
-
-                <div className='text-[10px] tracking-[0.22em] uppercase text-violet-200/35 mb-1'>
-                  Encryption
-                </div>
-
-                <div className='text-[13px] font-medium text-white'>
-                  AES-256 Active
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
+      
 
         {/* RIGHT PANEL */}
 
@@ -297,7 +255,7 @@ export default function Login() {
 
         </div>
 
-      </div>
+     
 
     </section>
 

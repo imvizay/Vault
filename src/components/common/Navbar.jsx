@@ -9,7 +9,7 @@ function Navbar() {
 
   const [openMenu, setOpenMenu] = useState(false)
   const navigate = useNavigate()
-  const {user} = useUser()
+  const {user,logoutUser} = useUser()
 
   const {
     navbarCtxRef,
@@ -26,6 +26,7 @@ function Navbar() {
   } = useNavbarAnimation(openMenu)
 
   const normalizeUsername = (user) => {
+    console.log('user mobile widht',user)
     let username = user.split('@')[0]
     username = username.charAt(0).toUpperCase() + username.slice(1)
     username = username.replace(/[0-9]+$/,'')
@@ -39,8 +40,9 @@ function Navbar() {
       <nav ref={navbarCtxRef} className='px-4 py-4 fixed top-0 left-0 right-0 z-[997] flex items-center justify-between border border-transparent backdrop-blur-2xl'>
 
         {/* LOGO */}
-        <div className='font-[SyneExtraBold] text-sm'>
-          Gallary Vault
+        <div className='flex flex-col font-[SyneExtraBold] text-sm'>
+         <h2> Gallary Vault</h2>
+         <p className='text-gray-500 mt-1 text-[7px] md:hidden'>{normalizeUsername(user ?? "")}</p>
         </div>
 
         {/* DESKTOP NAV */}
@@ -78,7 +80,11 @@ function Navbar() {
         <button onClick={ () => navigate('/login')}  className='hidden md:block text-white font-bold border border-gray-300 py-2 px-6 rounded-full bg-black backdrop-blur-2xl'>
           Create Vault
         </button> :
-        normalizeUsername(user)
+
+        <div className='hidden md:block md:flex md:justify-center md:items-center md:gap-2'>
+          <p>{normalizeUsername(user ?? "")}</p>
+          <button onClick={()=>logoutUser()} className='hidden md:block text-white font-bold border border-gray-300 py-2 px-6 rounded-full bg-black backdrop-blur-2xl'>Logout</button>
+        </div>
         }
 
         {/* MOBILE HAMBURGER */}
@@ -128,12 +134,16 @@ function Navbar() {
               </AnimatedText>
           </div>
             
-          <button data-cursor='morph' 
+         {!user ?  <button data-cursor='morph' 
             className='menu-link md:hidden
             block text-3xl text-white font-bold border border-white py-2 px-6 rounded-full -rotate-6'
             >
               Create Vault
-          </button>
+          </button> : 
+              
+            <button onClick={()=>logoutUser()} className='menu-link md:hidden
+            block text-3xl text-white font-bold border border-white py-2 px-6 rounded-full -rotate-6'>Logout</button>
+          }
             
           </div>
          

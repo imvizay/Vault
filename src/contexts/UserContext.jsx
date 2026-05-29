@@ -10,6 +10,7 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
+    const [masterKey,setMasterKey] = useState(null)
 
     useEffect(() => {
 
@@ -47,6 +48,8 @@ export const UserProvider = ({ children }) => {
         <UserContext.Provider
             value={{
                 user,
+                setMasterKey,
+                masterKey,
                 loginUser,
                 logoutUser
             }}

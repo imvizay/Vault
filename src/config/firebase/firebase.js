@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 
 import { getAuth,GoogleAuthProvider,GithubAuthProvider,FacebookAuthProvider } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 
 const firebaseConfig = {
@@ -15,8 +16,18 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 
+// Firebase Authentication
 export const auth = getAuth(app)
 
+// FIREBASE DATABASE
+export const db = getFirestore(app)
+
+// SOCIAL AUTH PROVIDERS
 export const googleProvider = new GoogleAuthProvider()
 export const facebookProvider = new FacebookAuthProvider()
 export const githubProvider = new GithubAuthProvider()
+
+console.log(
+  "PROJECT ID:",
+  auth.app.options.projectId
+)

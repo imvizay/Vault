@@ -19,8 +19,8 @@ import Register from '../components/auth/Register';
 import ProtectedRoutes from '@routes/ProtectedRoutes';
 
 // BASE LANDING COMPONENT
-import Home from '@pages/public/Home'
 
+import Home from '../pages/onboarding/Home'
 
 // CURSOR
 import Cursor from '@components/cursor/Cursor'

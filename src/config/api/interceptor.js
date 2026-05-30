@@ -1,3 +1,4 @@
+console.log("INTERCEPTOR FILE LOADED")
 import api from "./axios"
 
 import { auth } from "../firebase/firebase"

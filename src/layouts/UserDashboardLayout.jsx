@@ -14,13 +14,34 @@ import {
 
 // MASTERKEY
 import { useUser } from '@contexts/UserContext'
+import { useMutation } from '@tanstack/react-query'
+import { removeImage, uploadImageAPI } from '../config/firebase/upload'
 
 function UserDashboardLayout() {
 
   const [uploadOverlay,setUploadOverlay] = useState(false)
   const [notification,setNotification] = useState(null)
+  const [logout,setLogout] = useState(false)
   const inputRef = useRef()
-  const {masterKey} = useUser()
+  
+  const {user,masterKey,logoutUser} = useUser()
+
+
+  const isModalOpen =
+  logout || uploadOverlay;
+
+  useEffect(() => {
+
+    document.body.style.overflow =
+      isModalOpen
+        ? 'hidden'
+        : 'auto';
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+
+  }, [isModalOpen]);
 
   useEffect(() => {
 
@@ -35,6 +56,15 @@ function UserDashboardLayout() {
     return () => clearTimeout(t)
 
   }, [notification])
+
+
+  const fileMutation  = useMutation({
+    mutationFn:(payload)=>uploadImageAPI(payload)
+  })
+
+  const removeImageMutation = useMutation({
+    mutationFn: (img_id) => removeImage(img_id)
+  }) 
 
 
 
@@ -54,9 +84,8 @@ function UserDashboardLayout() {
     if(!files.length) return 
     
     try{  
-      
-      // encrypted files
-      
+    
+      // ENCRYPTED FILE ARRAY
       const encryptedFiles = await Promise.all(
       
         files.map(async file => {
@@ -80,9 +109,9 @@ function UserDashboardLayout() {
           )
       
           // CHECK STATUS
-          console.log(`FILE:${file}`)
-          console.log(`IV:${iv}`)
-          console.log(`ENCRYPTEDDATA:${encryptedData}`)
+          // console.log(`FILE:${file}`)
+          // console.log(`IV:${iv}`)
+          // console.log(`ENCRYPTEDDATA:${encryptedData}`)
 
           // CONVERT BINARY INTO BLOB
           const encryptedBlob = new Blob(
@@ -98,44 +127,70 @@ function UserDashboardLayout() {
           )
 
           return {
-            originalName:file.name,     
-            originalType:file.type,     
-            size:file.size,     
-            iv:ivBase64,      
-            encryptedBlob,      
+                
+            encryptedBlob,  
+            metadata:{
+              iv:ivBase64,  
+              originalName:file.name,     
+              originalType:file.type,     
+              size:file.size,     
+            }    
         }
       
         })
       )
 
-      // BACKEND API CALL 
+      
+      // PAYLOD FOR BACKEND DB.
       const formData = new FormData()
 
-      encryptedFiles.forEach(element => {
-        console.log("FILE EL",element)
-      });
-
-
-
-      setNotification({
-       message: `${files.length} file selected`,
-       files
+      // files array
+      encryptedFiles.forEach(fileData => {
+        formData.append('files',fileData.encryptedBlob , `${crypto.randomUUID()}.enc`)
       })
+
+      // one metadata array for all files
+      const metadata = encryptedFiles.map(file => file.metadata)
+
+      
+      formData.append('metadata',JSON.stringify(metadata))
+
+      // BACKEND API CALL 
+      fileMutation.mutate(formData)
+      
     }
 
     catch(error){
       console.log("ENCRYPTION ERROR : ",error)
     }
+
+    finally{
+      setNotification({
+       message: `${files.length} file selected`,
+       files
+      })
+    }
   }
+
+
+  // HANDLE REMOVE IMAGE
+
+  const deleteImage = (img_id) => {
+
+    if(!img_id) return
+
+    removeImageMutation.mutate(img_id)
+
+  } 
 
   
 
   return (
 
-    <div className='min-h-screen bg-[#111114] text-white'>
+    <div className="min-h-screen bg-[#111114] text-white overflow-x-hidden">
 
       {/* TOPBAR */}
-      <header className=' h-[70px] border-b border-white/5 bg-[#111114]/80 backdrop-blur-xl px-10 flex items-center justify-between '>
+      <header className="relative z-100 h-[70px] px-4 sm:px-6 lg:px-10 border-b border-white/5 bg-[#111114]/80 backdrop-blur-xl flex items-center justify-between">
 
         {/* LEFT */}
         <div className='flex items-center gap-16'>
@@ -158,26 +213,103 @@ function UserDashboardLayout() {
         </div>
 
         {/* USER */}
-        <button className=' flex items-center gap-4 px-3 py-0.5 rounded-2xl transition-all duration-300 bg-white/[0.03] 
-        border border-white/5 hover:bg-white/[0.06]'>
+       <button
+        onClick={() => setLogout(prev => !prev)}
+        className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-1 rounded-2xl
+        bg-white/[0.03] border border-white/5 hover:bg-white/[0.06]
+        transition-all duration-300"
+      >
+        
+        <img
+          src="https://i.pravatar.cc/100"
+          alt="user"
+          className="w-9 h-9 sm:w-12 sm:h-12 rounded-full object-cover"
+        />
+      
+        <span className="hidden sm:block font-semibold text-sm">
+          {user}
+        </span>
+        
+        <ChevronDown
+          size={18}
+          className={`transition-transform duration-300 ${
+            logout ? "rotate-180" : ""
+          }`}
+        />
+      
+      </button>
 
-          <img src='https://i.pravatar.cc/100' alt='user' className=' w-12 h-12 rounded-full object-cover ' />
+    {
+      logout && (
+      
+        <>
+          {/* BACKDROP */}
+      
+          <div
+            onClick={() => setLogout(false)}
+            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm"
+          />
 
-          <span className='font-semibold text-[14px]'>
-            Vijay Meena
-          </span>
+          {/* MENU */}
+      
+          <div className=" fixed sm:fixed h-screen md:h-auto z-50 top-0 left-0 right-0 sm:bottom-auto sm:left-auto sm:right-6 sm:top-[60px] sm:w-[320px] sm:rounded-t-[32px] sm:rounded-[28px] border border-white/10 bg-[#18181f]/95 backdrop-blur-xl p-5 shadow-2xl shadow-black/50
+          "
+          >
+          
+            {/* USER INFO */}
+      
+            <div className="flex items-center gap-4 pb-5 border-b border-white/10">
+      
+              <img
+                src="https://i.pravatar.cc/100"
+                alt=""
+                className="w-14 h-14 rounded-full"
+              />
 
-          <ChevronDown size={18} />
+              <div>
+      
+                <h3 className="font-semibold">
+                  {user}
+                </h3>
+      
+                <p className="text-sm text-zinc-500">
+                  Secure Vault User
+                </p>
+      
+              </div>
+      
+            </div>
+      
+            {/* MENU ITEMS */}
+      
+            <div className="flex flex-col justify-center items-center h-full mt-4 space-y-2">
+        
+              <button onClick={logoutUser} className=" w-full h-12 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all font-medium
+              "
+              >
+                Logout
+              </button>
 
-        </button>
+              <button onClick={()=>setLogout(p=>!p)}
+                className=" w-full h-12 rounded-2xl bg-transparent border border-white text-white-400 hover:bg-white transition-all font-medium
+              ">Cancel</button>
+      
+            </div>
+      
+          </div>
+      
+        </>
+
+      )
+    }
 
       </header>
 
       {/* BODY */}
-      <section className='px-12 py-3'>
+      <section className="px-4 sm:px-6 lg:px-12 py-4">
 
         {/* HEADER */}
-        <div className='flex items-start justify-between'>
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
 
           {/* LEFT */}
           <div>
@@ -205,7 +337,7 @@ function UserDashboardLayout() {
           {/* RIGHT */}
           <div className='flex items-center gap-5'>
 
-            <button onClick={()=>setUploadOverlay(prev => !prev)} className='text-[12px] group relative overflow-hidden h-[40px] px-6 rounded-[20px] border border-violet-400/20 bg-gradient-to-br bg-violet-600 text-white font-medium flex items-center gap-3 '>
+            <button onClick={()=>setUploadOverlay(prev => !prev)} className="h-11 px-5 sm:px-6 rounded-full border border-violet-400/20 bg-violet-600 text-white font-medium flex items-center gap-2 sm:gap-3" >
 
               <Upload size={18} className='relative z-10' />
 
@@ -214,23 +346,6 @@ function UserDashboardLayout() {
               </span>
 
             </button>
-
-            {/* VIEW MODES */}
-            {/* <div className='flex items-center gap-3'>
-
-              <button className=' w-[56px] h-[56px] rounded-2xl bg-violet-100 text-violet-600 flex items-center justify-center '>
-
-                <LayoutGrid size={20} />
-
-              </button>
-
-              <button className=' w-[56px] h-[56px] rounded-2xl bg-[#f2f2f7] text-[#6b7280] flex items-center justify-center hover:bg-[#ececf2] transition-all duration-300 '>
-
-                <List size={20} />
-
-              </button>
-
-            </div> */}
 
           </div>
 
@@ -243,7 +358,7 @@ function UserDashboardLayout() {
           <div className='flex items-center gap-2'>
 
             {
-              ['All', 'Images', 'Videos', 'Favorites']
+              ['All']
               .map((el, idx) => (
 
                 <button key={idx} className={`text-[12px] h-[30px] px-6 rounded-2xl font-semibold transition-all duration-300
@@ -266,21 +381,16 @@ function UserDashboardLayout() {
 
           </div>
 
-          {/* SORT */}
-          {/* <button className=' h-[56px] px-6 rounded-2xl bg-white border border-[#ececf2] flex items-center gap-4 font-medium text-[#4b5563] hover:border-violet-300 transition-all duration-300 '>
-
-            Date Added
-
-            <ChevronDown size={18} />
-
-          </button> */}
+  
 
         </div>
 
         {/* OUTLET */}
-        <main className='mt-10 rounded-[32px] bg-white/[0.02] border border-white/5 p-6'>
+        <main className="mt-6 sm:mt-8 rounded-3xl bg-white/[0.02] border border-white/5 p-4 sm:p-6">
 
-          <Outlet />
+          <Outlet context={{
+            deleteImage
+          }}/>
 
         </main>
 

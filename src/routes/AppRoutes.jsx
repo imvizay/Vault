@@ -23,6 +23,7 @@ const Home = lazy( () => import('@pages/public/Home'))
 
 // CURSOR
 import Cursor from '@components/cursor/Cursor'
+import Gallery from '../pages/user/Gallery';
 
 function AppRoutes() {
   return (
@@ -52,6 +53,8 @@ function AppRoutes() {
             <UserDashboardLayout/>
           </ProtectedRoutes>
         }>
+
+          <Route index element = {<Gallery/>}/>
       </Route>
 
     

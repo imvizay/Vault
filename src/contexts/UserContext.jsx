@@ -5,6 +5,8 @@ import {
     useState
 } from "react";
 
+import saveMasterKeyInSession from "../utilis/saveMasterKeyInSession";
+
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -12,19 +14,91 @@ export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [masterKey,setMasterKey] = useState(null)
 
-    useEffect(() => {
+    
 
-        const storedUser = JSON.parse(
-            localStorage.getItem('user')
-        );
+    const restoreMasterKey = async () => {
+        const stored = sessionStorage.getItem('vaultkey')
 
-        if(storedUser){
+        if(!stored) return 
+        const session = JSON.parse(stored)
 
-            setUser(storedUser);
-
+        if(Date.now() > session.expires_at){
+            sessionStorage.removeItem('vaultkey')
+            return
         }
 
-    }, []);
+        const keyBytes = Uint8Array.from(atob(session.key),c=>c.charCodeAt(0))
+
+        const importKey = await crypto.subtle.importKey(
+             "raw",
+            keyBytes,
+            {
+                name:"AES-GCM"
+            },
+            true,
+            ["encrypt","decrypt"]
+        )
+        setMasterKey(importKey)
+    }   
+
+    useEffect(() => {
+
+    const interval = setInterval(() => {
+
+        const stored =
+                sessionStorage.getItem(
+                    "vaultkey"
+                )
+
+            if(!stored) return
+
+            const session =
+                JSON.parse(stored)
+
+            if(
+                Date.now() >
+                session.expiresAt
+            ){
+
+                sessionStorage.removeItem(
+                    "vaultkey"
+                )
+
+                setMasterKey(null)
+            }
+
+        }, 60000)
+
+        return () =>
+            clearInterval(interval)
+
+    }, [])
+
+    // check stored user
+    useEffect(() => {
+        const init = async () => {
+            const storedUser = JSON.parse(
+            localStorage.getItem('user')
+        )
+
+        if(storedUser){
+            setUser(storedUser)
+            await restoreMasterKey()
+        }
+        }
+
+        init()
+    }, [])
+
+
+    // Save masterkey into session
+    useEffect( () => {
+        if(!masterKey) return
+        saveMasterKeyInSession(masterKey)
+    },[masterKey])
+
+    
+
 
     const loginUser = (u) => {
 
@@ -39,6 +113,8 @@ export const UserProvider = ({ children }) => {
     const logoutUser = () => {
 
         localStorage.removeItem('user');
+        sessionStorage.removeItem('vaultkey')
+        setMasterKey(null)
 
         setUser(null);
     };

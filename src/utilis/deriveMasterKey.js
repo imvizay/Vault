@@ -19,7 +19,7 @@ export const deriveMasterKey = async ( password, salt ) => {
       {
         name: 'AES-GCM'
       },
-      false,
+      true,
       ['encrypt', 'decrypt']
     )
 

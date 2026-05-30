@@ -1,6 +1,6 @@
 import React from 'react'
 
-import useHeroAnimation from '../../animations/useheroAnimation'
+import useHeroAnimation from '../../animations/useHeroAnimation'
 
 const HeroOrbs = ({
     purpleOrbRef,

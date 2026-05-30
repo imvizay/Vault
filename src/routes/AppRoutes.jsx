@@ -19,7 +19,8 @@ import Register from '../components/auth/Register';
 import ProtectedRoutes from '@routes/ProtectedRoutes';
 
 // BASE LANDING COMPONENT
-const Home = lazy( () => import('@pages/public/Home'))
+import Home from '@pages/public/Home'
+
 
 // CURSOR
 import Cursor from '@components/cursor/Cursor'

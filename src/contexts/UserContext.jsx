@@ -9,14 +9,22 @@ import saveMasterKeyInSession from "../utilis/saveMasterKeyInSession";
 
 export const UserContext = createContext();
 
-export const UserProvider = ({ children }) => {
+export const UserProvider = ({ children }) => { 
+    
 
     const [user, setUser] = useState(null);
     const [masterKey,setMasterKey] = useState(null)
+    const [isRestoring,setIsReStoring] = useState(true)
 
 
     const restoreMasterKey = async () => {
+      try{
+        console.group("MASTER KEY RESTORATION PROCESS")
+        console.log("RESTORE START")
+
         const stored = sessionStorage.getItem('vaultkey')
+
+        console.log("STORED", stored)
 
         if(!stored) return 
         const session = JSON.parse(stored)
@@ -37,7 +45,16 @@ export const UserProvider = ({ children }) => {
             true,
             ["encrypt","decrypt"]
         )
+        console.log("KEY IMPORTED")
+
         setMasterKey(importKey)
+
+        console.log("SETMASTERKEY CALLED")
+        console.groupEnd()
+    }
+    catch(error){
+        console.log("RESTORATION MASTER KEY ERROR : ",error)
+    }
     }   
 
     useEffect(() => {
@@ -63,46 +80,48 @@ export const UserProvider = ({ children }) => {
     // check stored user
     useEffect(() => {
         const init = async () => {
-            const storedUser = JSON.parse(
-            localStorage.getItem('user')
-        )
+            const storedUser = JSON.parse(localStorage.getItem('user'))
+            
 
-        if(storedUser){
-            setUser(storedUser)
-            await restoreMasterKey()
-        }
-        }
+            console.log("LOCAL STORED USER:",user)
 
+            if(storedUser){
+                setUser(storedUser)
+                await restoreMasterKey()
+            }
+
+            setIsReStoring(false)
+        }
         init()
     }, [])
 
 
     // Save masterkey into session
     useEffect( () => {
+
         if(!masterKey) return
         saveMasterKeyInSession(masterKey)
+
     },[masterKey])
 
     
-
-
     const loginUser = (u) => {
 
-        localStorage.setItem(
-            'user',
-            JSON.stringify(u.email)
-        );
+        localStorage.setItem('user', JSON.stringify(u))
+        setUser(u)
 
-        setUser(u);
-    };
+        console.log("LOGIN USER USER:",user)
+    }
 
+    
     const logoutUser = () => {
 
         localStorage.removeItem('user');
         sessionStorage.removeItem('vaultkey')
         setMasterKey(null)
-
         setUser(null);
+
+        navigate('/')
     };
 
     return (
@@ -110,6 +129,7 @@ export const UserProvider = ({ children }) => {
         <UserContext.Provider
             value={{
                 user,
+                isRestoring,
                 setMasterKey,
                 masterKey,
                 loginUser,

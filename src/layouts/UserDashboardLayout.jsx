@@ -17,12 +17,15 @@ import { useUser } from '@contexts/UserContext'
 import { useMutation } from '@tanstack/react-query'
 import { removeImage, uploadImageAPI } from '../config/firebase/upload'
 
+import { useNavigate } from 'react-router-dom'
+
 function UserDashboardLayout() {
 
   const [uploadOverlay,setUploadOverlay] = useState(false)
   const [notification,setNotification] = useState(null)
   const [logout,setLogout] = useState(false)
   const inputRef = useRef()
+  const navigate = useNavigate()
   
   const {user,masterKey,logoutUser} = useUser()
 
@@ -68,7 +71,7 @@ function UserDashboardLayout() {
   const handleFileChange = async (e) => {
 
     if(!masterKey){
-      alert("Master key expired as the user refreshed the browser.Please login again to generate fresh masterKey again.")
+      alert("Master key lost login again.")
       return 
     }
 
@@ -150,7 +153,7 @@ function UserDashboardLayout() {
 
       // BACKEND API CALL 
       fileMutation.mutate(formData)
-      
+
     }
 
     catch(error){
@@ -158,6 +161,7 @@ function UserDashboardLayout() {
     }
 
     finally{
+      setUploadOverlay(false)
       setNotification({
        message: `${files.length} file selected`,
        files
@@ -193,7 +197,7 @@ function UserDashboardLayout() {
 
             </div>
 
-            <h1 className=' text-[22px] font-black tracking-tight '>
+            <h1 className="hidden sm:block text-[22px] font-black tracking-tight">
               Gallery Vault
             </h1>
 
@@ -222,7 +226,7 @@ function UserDashboardLayout() {
         <ChevronDown
           size={18}
           className={`transition-transform duration-300 ${
-            logout ? "rotate-180" : ""
+            user && logout ? "rotate-180" : ""
           }`}
         />
       
@@ -273,14 +277,22 @@ function UserDashboardLayout() {
       
             <div className="flex flex-col justify-center items-center h-full mt-4 space-y-2">
         
-              <button onClick={logoutUser} className=" w-full h-12 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all font-medium
+              {user ? <button onClick={()=>{
+                logoutUser()
+                navigate('/')
+
+              }} className=" w-full h-12 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all font-medium
               "
               >
                 Logout
-              </button>
+              </button> : 
+
+              <button onClick={()=>navigate('/login')} className=' w-full h-12 rounded-2xl bg-transparent border border-white text-white-400 hover:bg-green-950 transition-all font-medium'>
+              Login  
+              </button>}
 
               <button onClick={()=>setLogout(p=>!p)}
-                className=" w-full h-12 rounded-2xl bg-transparent border border-white text-white-400 hover:bg-white transition-all font-medium
+                className=" w-full h-12 rounded-2xl bg-transparent border border-white text-white-400 hover:bg-black transition-all font-medium
               ">Cancel</button>
       
             </div>
@@ -301,44 +313,43 @@ function UserDashboardLayout() {
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
 
           {/* LEFT */}
-          <div>
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-violet-500/10 via-transparent to-cyan-500/10 p-6 sm:p-8">
 
-            <div className='flex items-center gap-3'>
+              <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-violet-500/10 blur-3xl" />
 
-              <h2 className=' text-[22px] font-black tracking-tight leading-none '>
+              <div className="relative z-10">
 
-                Your Memories
+                <div className="flex items-center gap-3">
 
-              </h2>
+                  <Shield className="text-violet-400" size={26} />
 
-              <Shield size={26} className='text-violet-600 mt-2' />
+                  <span className="text-violet-300 text-sm font-medium">
+                    End-to-End Encrypted
+                  </span>
 
-            </div>
+                </div>
 
-            <p className=' text-[#6b7280] text-[12px] font-medium '>
+                <h2 className="mt-4 text-3xl sm:text-5xl font-black tracking-tight">
+                  Your Memories
+                </h2>
 
-              Encrypted and secured just for you.
+                <p className="mt-3 text-zinc-400">
+                  Protected by client-side encryption.
+                </p>
 
-            </p>
+                <button
+                  onClick={()=>setUploadOverlay(true)}
+                  className="mt-6 h-12 px-6 rounded-2xl bg-violet-600 hover:bg-violet-500 transition-all flex items-center gap-3 font-medium"
+                >
+                  <Upload size={18}/>
+                  Upload Photos
+                </button>
 
-          </div>
+              </div>
 
-          {/* RIGHT */}
-          <div className='flex items-center gap-5'>
+              </div>
 
-            <button onClick={()=>setUploadOverlay(prev => !prev)} className="h-11 px-5 sm:px-6 rounded-full border border-violet-400/20 bg-violet-600 text-white font-medium flex items-center gap-2 sm:gap-3" >
-
-              <Upload size={18} className='relative z-10' />
-
-              <span className='relative z-10'>
-                Upload Photos
-              </span>
-
-            </button>
-
-          </div>
-
-        </div>
+           </div>
 
         {/* FILTERS */}
         <div className=' flex items-center justify-between mt-4 '>
@@ -375,11 +386,9 @@ function UserDashboardLayout() {
         </div>
 
         {/* OUTLET */}
-        <main className="mt-6 sm:mt-8 rounded-3xl bg-white/[0.02] border border-white/5 p-4 sm:p-6">
+        <main className="mt-6 rounded-[36px] border border-white/10 bg-[#16161d] p-3 sm:p-5">
 
-          <Outlet context={{
-            deleteImage
-          }}/>
+          <Outlet context={{deleteImage}}/>
 
         </main>
 

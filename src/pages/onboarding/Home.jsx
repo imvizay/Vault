@@ -10,7 +10,7 @@ import Features from '@components/features/Features';
 import GallerySection from '@components/gallery/Gallery';
 import HowItWorks from '@components/howitworks/HowItWorks';
 import SecuritySection from '@components/security/Security';
-import PricingSection from '@components/pricing/Pricing';
+
 
 function Home() {
   return (
@@ -22,7 +22,6 @@ function Home() {
       <GallerySection/>
       <HowItWorks/>
       <SecuritySection/>
-      <PricingSection/>
     </>
   )
 }

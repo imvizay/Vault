@@ -134,7 +134,7 @@ function Navbar() {
               </AnimatedText>
           </div>
             
-         {!user ?  <button data-cursor='morph' 
+         {!user ?  <button onClick={()=>navigate('/login')} data-cursor='morph' 
             className='menu-link md:hidden
             block text-3xl text-white font-bold border border-white py-2 px-6 rounded-full -rotate-6'
             >

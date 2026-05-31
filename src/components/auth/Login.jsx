@@ -56,8 +56,8 @@ export default function Login() {
 
       setMasterKey(masterKey)
       
-      console.log("MASTER KEY:",masterKey)
-      console.log("USER:",user)
+      // console.log("MASTER KEY:",masterKey)
+      // console.log("USER:",user)
       navigate('/user/dashboard')
 
 

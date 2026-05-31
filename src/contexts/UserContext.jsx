@@ -14,7 +14,6 @@ export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [masterKey,setMasterKey] = useState(null)
 
-    
 
     const restoreMasterKey = async () => {
         const stored = sessionStorage.getItem('vaultkey')
@@ -30,7 +29,7 @@ export const UserProvider = ({ children }) => {
         const keyBytes = Uint8Array.from(atob(session.key),c=>c.charCodeAt(0))
 
         const importKey = await crypto.subtle.importKey(
-             "raw",
+            "raw",
             keyBytes,
             {
                 name:"AES-GCM"
@@ -45,33 +44,20 @@ export const UserProvider = ({ children }) => {
 
     const interval = setInterval(() => {
 
-        const stored =
-                sessionStorage.getItem(
-                    "vaultkey"
-                )
+        const stored = sessionStorage.getItem("vaultkey")
 
             if(!stored) return
 
-            const session =
-                JSON.parse(stored)
+            const session = JSON.parse(stored)
 
-            if(
-                Date.now() >
-                session.expiresAt
-            ){
-
-                sessionStorage.removeItem(
-                    "vaultkey"
-                )
-
+            if(Date.now() > session.expires_at){
+                sessionStorage.removeItem("vaultkey")
                 setMasterKey(null)
             }
 
         }, 60000)
 
-        return () =>
-            clearInterval(interval)
-
+        return () => clearInterval(interval)
     }, [])
 
     // check stored user

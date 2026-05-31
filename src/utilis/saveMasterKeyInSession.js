@@ -3,6 +3,7 @@ import React from 'react'
 
 
 async function saveMasterKeyInSession (masterKey) {
+    
      try{
         const rawKey = await crypto.subtle.exportKey('raw',masterKey)
         console.log("RAW KEY",rawKey)

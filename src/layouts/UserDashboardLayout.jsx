@@ -26,35 +26,30 @@ function UserDashboardLayout() {
   
   const {user,masterKey,logoutUser} = useUser()
 
+  const isModalOpen = logout || uploadOverlay
 
-  const isModalOpen =
-  logout || uploadOverlay;
+  useEffect(()=>{
+    if(masterKey){
+      console.log("MK Active.")
+    }
+  },[masterKey])
 
   useEffect(() => {
-
-    document.body.style.overflow =
-      isModalOpen
-        ? 'hidden'
-        : 'auto';
-
+    document.body.style.overflow = isModalOpen ? 'hidden' : 'auto'
     return () => {
-      document.body.style.overflow = 'auto';
-    };
+      document.body.style.overflow = 'auto'
+    }
+  }, [isModalOpen])
 
-  }, [isModalOpen]);
 
   useEffect(() => {
-
     if(!notification) return
     console.log("notification running")
     const t = setTimeout(() => {
-    
         setNotification(null)
-    
     }, 3000)
   
     return () => clearTimeout(t)
-
   }, [notification])
 
 
@@ -65,8 +60,6 @@ function UserDashboardLayout() {
   const removeImageMutation = useMutation({
     mutationFn: (img_id) => removeImage(img_id)
   }) 
-
-
 
   const handleOpenFilePicker = () => {
     inputRef.current.click()
@@ -174,13 +167,9 @@ function UserDashboardLayout() {
 
 
   // HANDLE REMOVE IMAGE
-
   const deleteImage = (img_id) => {
-
     if(!img_id) return
-
     removeImageMutation.mutate(img_id)
-
   } 
 
   

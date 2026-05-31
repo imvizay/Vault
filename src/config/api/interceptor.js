@@ -11,7 +11,7 @@ api.interceptors.request.use(
 
         const user = auth.currentUser
 
-        console.log("CURRENT USER:", user)
+        // console.log("CURRENT USER:", user)
 
         if (user) {
 
@@ -52,3 +52,4 @@ api.interceptors.response.use(
         return Promise.reject(error)
     }
 )
+

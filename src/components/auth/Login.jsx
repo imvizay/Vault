@@ -30,7 +30,7 @@ import { useUser } from '../../contexts/UserContext.jsx';
 
 export default function Login() {
   const navigate = useNavigate()
-  const {setMasterKey} = useUser()
+  const {setMasterKey,loginUser} = useUser()
 
   const {register,  
     handleSubmit,
@@ -50,6 +50,9 @@ export default function Login() {
      
       const {user,salt} = await loginInWithFirebase(data.email,data.password)
       console.log('[1] User authenticated')
+
+      console.log("FIREBASE LOGGED IN USER OBJ : ",user)
+      loginUser(user.email)
 
       const masterKey = await deriveMasterKey(data.password,salt)
        console.log('[2] Master Key Generated')
@@ -73,192 +76,100 @@ export default function Login() {
 
   return (
 
-    <section className='w-full min-h-screen overflow-hidden bg-[#05010f] flex items-center justify-center p-3 sm:p-5 lg:p-6 relative'>
+    <section className="relative min-h-screen w-full overflow-hidden bg-[#05010f] flex items-center justify-center px-4 py-8">
 
-      
+    <div className="absolute top-[-10%] left-[-10%] h-[320px] w-[320px] rounded-full bg-violet-600/20 blur-[120px]" />
+    <div className="absolute bottom-[-10%] right-[-10%] h-[320px] w-[320px] rounded-full bg-fuchsia-600/20 blur-[120px]" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(139,92,246,0.12),transparent_40%)]" />
 
-        {/* RIGHT PANEL */}
+    <div className="relative z-10 w-full max-w-[520px] rounded-[30px] border border-white/10 bg-white/[0.04] backdrop-blur-2xl shadow-[0_0_60px_rgba(139,92,246,0.12)] p-5 sm:p-8 md:p-10">
 
-        <div className="relative flex flex-col justify-center px-5 py-6 sm:px-8 sm:py-8 lg:px-12 lg:py-8 overflow-y-auto' overflow-x-hidden">
+      <div className="flex items-center justify-between mb-8">
 
-          {/* TOP BAR */}
+        <button onClick={() => navigate('/')} className="flex items-center gap-2 text-violet-200/50 hover:text-white transition-all duration-300 text-[12px] uppercase tracking-[0.15em]">
+          <ArrowLeft size={15} />
+          Back
+        </button>
 
-          <div className='flex justify-between items-center gap-4 mb-4 md:mb-7'>
+        <button onClick={() => navigate('/register')} className="rounded-full border border-violet-300/25 px-5 py-2.5 text-[11px] tracking-[0.12em] text-violet-200 hover:bg-white hover:text-black transition-all duration-300">
+          REGISTER
+        </button>
 
-            <button onClick={() => navigate('/')} className='flex items-center gap-2 text-violet-200/45 hover:text-white transition-all duration-300 text-[12px] sm:text-[13px] tracking-[0.08em] uppercase w-fit'>
-              <ArrowLeft size={15} />
-              Back
-            </button>
+      </div>
 
-            <button onClick={()=>navigate('/register')} className='text-[12px] sm:text-[13px] border border-violet-300/40 rounded-2xl py-2.5 px-4 sm:px-5 text-violet-300 hover:text-black hover:bg-white/60 transition-colors whitespace-nowrap'>
-              REGISTER
-            </button>
+      <div className="text-center mb-8">
 
+        <h1 className="font-[SyneExtraBold] text-[25px] sm:text-[40px] tracking-[-0.08em] bg-gradient-to-r from-violet-200 via-pink-200 to-cyan-200 bg-clip-text text-transparent">
+          GalleryVault
+        </h1>
+
+        <p className="mt-2 text-violet-100/35 text-sm tracking-wide">
+          Securely store your memories
+        </p>
+
+      </div>
+
+      <form onSubmit={handleSubmit(onAccessvault)} className="space-y-4">
+
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] transition-all duration-300 hover:border-violet-400/30 focus-within:border-violet-400/40 focus-within:shadow-[0_0_30px_rgba(139,92,246,0.15)]">
+
+          <div className="absolute left-4 top-1/2 -translate-y-1/2">
+            <Mail size={18} className="text-violet-200/40" />
           </div>
 
-          {/* MOBILE LOGO */}
-
-          <div className='lg:hidden text-center mb-4 md:mb-8'>
-
-            <div className='text-[26px] md:text-[38px] sm:text-[48px] font-[SyneExtraBold] tracking-[-0.06em] bg-gradient-to-r from-violet-200 via-pink-200 to-cyan-200 bg-clip-text text-transparent'>
-              GalleryVault
-            </div>
-
-          </div>
-
-          {/* HEADER */}
-
-          <div className='mb-6'>
-
-            <div className='uppercase tracking-[0.32em] text-[9px] sm:text-[10px] text-violet-200/35 mb-2 md:mb-3'>
-              Welcome Back
-            </div>
-
-            <h2 className='max-w-[520px] text-[clamp(2.2rem,8vw,2rem)] font-[SyneExtraBold] leading-[0.88] tracking-[-0.07em] text-white mb-3'>
-
-              Sign into
-              <br className='sm:hidden' />
-              {' '}your vault.
-
-            </h2>
-
-            <p className='text-[13px] sm:text-[14px] leading-7 text-violet-100/40'>
-              Access your encrypted memories securely.
-            </p>
-
-          </div>
-
-          {/* SOCIAL BUTTONS */}
-
-          <div className='flex flex-col lg:flex-row gap-2 md:gap-4 mb-8'>
-
-            <button className='group relative overflow-hidden flex-1 rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-xl py-4 px-4 flex items-center justify-center gap-3 transition-all duration-500 hover:border-white/20 hover:bg-white/[0.05]'>
-
-              <div className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-violet-500/10 to-cyan-500/10' />
-
-              <FontAwesomeIcon icon={faGoogle} className='relative z-10 text-white/70' />
-
-              <span className='relative z-10 text-[10px] sm:text-[11px] tracking-[0.12em] uppercase text-white/70'>
-                Google
-              </span>
-
-            </button>
-
-            <button className='group relative overflow-hidden flex-1 rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-xl py-4 px-4 flex items-center justify-center gap-3 transition-all duration-500 hover:border-white/20 hover:bg-white/[0.05]'>
-
-              <div className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-violet-500/10 to-pink-500/10' />
-
-              <FontAwesomeIcon icon={faGithub} className='relative z-10 text-white/70' />
-
-              <span className='relative z-10 text-[10px] sm:text-[11px] tracking-[0.12em] uppercase text-white/70'>
-                Github
-              </span>
-
-            </button>
-
-            <button className='group relative overflow-hidden flex-1 rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-xl py-4 px-4 flex items-center justify-center gap-3 transition-all duration-500 hover:border-white/20 hover:bg-white/[0.05]'>
-
-              <div className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-violet-500/10 to-blue-500/10' />
-
-              <FontAwesomeIcon icon={faFacebook} className='relative z-10 text-white/70' />
-
-              <span className='relative z-10 text-[10px] sm:text-[11px] tracking-[0.12em] uppercase text-white/70'>
-                Facebook
-              </span>
-
-            </button>
-
-          </div>
-
-          {/* DIVIDER */}
-
-          <div className='flex items-center gap-3 mb-6'>
-
-            <div className='flex-1 h-px bg-white/10' />
-
-            <span className='text-[8px] sm:text-[9px] tracking-[0.24em] uppercase text-violet-200/25 whitespace-nowrap'>
-              Continue with Email
-            </span>
-
-            <div className='flex-1 h-px bg-white/10' />
-
-          </div>
-
-          {/* FORM */}
-
-          <form onSubmit={handleSubmit(onAccessvault)} className='space-y-2 md:space-y-4'>
-
-            {/* EMAIL */}
-
-            <div className='relative rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden'>
-
-              <div className='absolute left-4 top-1/2 -translate-y-1/2'>
-                <Mail size={16} className='text-violet-200/35' />
-              </div>
-
-              <input {...register('email')}
-              
-              type='email' placeholder='Email Address' className='w-full bg-transparent outline-none border-none py-4 pl-12 pr-4 text-[13px] sm:text-[14px] text-white placeholder:text-violet-200/25' />
-
-            </div>
-
-            {/* PASSWORD */}
-
-            <div className='relative rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden'>
-
-              <div className='absolute left-4 top-1/2 -translate-y-1/2'>
-                <Lock size={16} className='text-violet-200/35' />
-              </div>
-
-              <input {...register('password')} type='password' placeholder='Password' className='w-full bg-transparent outline-none border-none py-4 pl-12 pr-12 text-[13px] sm:text-[14px] text-white placeholder:text-violet-200/25' />
-
-              <button type='button' className='absolute right-4 top-1/2 -translate-y-1/2'>
-                <Eye size={16} className='text-violet-200/30' />
-              </button>
-
-            </div>
-
-            {/* OPTIONS */}
-
-            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1'>
-
-              <label className='flex items-center gap-2 cursor-pointer'>
-
-                <input type='checkbox' className='accent-violet-500 w-3.5 h-3.5' />
-
-                <span className='text-[11px] sm:text-[12px] text-violet-100/40'>
-                  Keep me signed in
-                </span>
-
-              </label>
-
-              <button type='button' className='text-[11px] sm:text-[12px] text-left sm:text-right text-violet-300/55 hover:text-white transition-colors'>
-                Forgot password?
-              </button>
-
-            </div>
-
-            {/* SUBMIT */}
-
-            <button type='submit' className='group relative overflow-hidden w-full rounded-xl py-4 mt-5 bg-transparent border border-white/20 text-white font-medium tracking-[0.14em] uppercase text-[10px] sm:text-[11px] transition-all duration-500 hover:scale-[1.01] hover:text-black'>
-
-              <div className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-white/60' />
-
-              <span className='relative z-10 flex items-center justify-center gap-2'>
-                Access Vault
-                <ArrowRight size={14} className='transition-transform duration-500 group-hover:translate-x-1' />
-              </span>
-
-            </button>
-
-          </form>
+          <input
+            {...register("email")}
+            type="email"
+            placeholder="Email Address"
+            className="w-full bg-transparent py-4 pl-12 pr-4 text-sm text-white placeholder:text-violet-100/25 outline-none"
+          />
 
         </div>
 
-     
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] transition-all duration-300 hover:border-violet-400/30 focus-within:border-violet-400/40 focus-within:shadow-[0_0_30px_rgba(139,92,246,0.15)]">
 
-    </section>
+          <div className="absolute left-4 top-1/2 -translate-y-1/2">
+            <Lock size={18} className="text-violet-200/40" />
+          </div>
+
+          <input
+            {...register("password")}
+            type="password"
+            placeholder="Password"
+            className="w-full bg-transparent py-4 pl-12 pr-12 text-sm text-white placeholder:text-violet-100/25 outline-none"
+          />
+
+          <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2">
+            <Eye size={18} className="text-violet-200/35" />
+          </button>
+
+        </div>
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-1">
+
+
+          <button type="button" className="text-[12px] text-violet-300/60 hover:text-white transition-colors">
+            Forgot password?
+          </button>
+
+        </div>
+
+        <button type="submit" className="group relative mt-6 w-full overflow-hidden rounded-2xl py-4 font-medium uppercase tracking-[0.18em] text-[11px] text-white border border-violet-400/20 bg-gradient-to-r from-violet-500/20  transition-all duration-500">
+
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r" />
+
+          <span className="relative z-10 flex items-center justify-center gap-2 group-hover:text-black transition-colors duration-300">
+            Access Vault
+            <ArrowRight size={15} className="transition-transform duration-500 group-hover:translate-x-1" />
+          </span>
+
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
 
   )
-
-}
+} 
